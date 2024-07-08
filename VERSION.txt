@@ -1,0 +1,34 @@
+------------------------------------------------------
+-------- HISTORIAL DE CAMBIOS v1.0 [16/IV/24] --------
+------------------------------------------------------
+
+
+Agregado:
+    El juego
+
+Por añadir:
+    Sprites de Alsexito (qué palo tú)
+    Jump buffering
+    Delta time
+    Tooltips para la ventana de selección de personajes
+    Parries
+    Más escenarios
+    Funcionalidad mejorada a los sprites de ataque y daño
+    Más SFX y música
+    Doble salto (no el bug)
+    Ataques melee (ya me joderia tener que meter ataques melee en un juego de peleas)
+    Ataques especiales
+    Arreglar cosas supongo
+
+
+Bugs ya conocidos:
+    Cuando cambias de personajes y no cambias nada, en vez de seguir con el mismo personaje de antes, seleccionas uno al azar.
+    Se pueden hacer saltos dobles cuando espameas el botón de saltar muy rápido.
+    Cuando tocas la parte lateral de una plataforma, te teletransporta encima de ella.
+    Las hitboxes no se alinean perfectamente cuando un jugador se está moviendo o saltando.
+    Los proyectiles pueden traspasar la plataforma grande.
+    Por algún motivo que desconozco el juego puede crashear con código 3489660927.
+
+
+Frase de la semana:
+    MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM - un microondas
