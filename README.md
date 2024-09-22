@@ -46,6 +46,6 @@ pedazo de juego
 1. `git clone https://github.com/berrota/super-bert-bros`
 2. `cd super-bert-bros`
 3. `pip install -r requirements.txt` o `pip install pygame`
-4. `python main.py` p `python3 main.py` (p `pythonw main.py`)
+4. `python main.py` o `python3 main.py` (o `pythonw main.py`)
 
 ## si necesitas más información, puedes probar en el [archivo VERSION.txt](VERSION.txt), este incluye el historial de cambios, cosas para añadir y errores ya conocidos.
