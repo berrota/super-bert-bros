@@ -14,58 +14,64 @@ from misc.key_bindings import *
 import pygame
 import random 
 import sys
+import time
 
 from tkinter import messagebox
+from typing import NoReturn
 
-
-def main():
+@staticmethod #<--- java referencia??!?!?!?!?!
+def main() -> NoReturn:
     
     #Inicializar cosas generales
     pygame.init()
     
-    FPS = 60
-    clock = pygame.time.Clock()
+    FPS: int = 60
+    clock: pygame.time.Clock = pygame.time.Clock()
+    prev_time: float = time.time()
+    deltaTime: float = 0
     
-    hitbox = False
-    pause = False
+    hitbox: bool = False
+    pause: bool = False
 
     #Proyectiles
-    max_projectiles = 8
-    player1_projectiles = []
-    player2_projectiles = []
-    projectile_cooldown = 25 #En ticks (60 ticks por segundo)
-    player1_projectile_cooldown = 0
-    player2_projectile_cooldown = 0
+    max_projectiles: int = 8
+    player1_projectiles: list = []
+    player2_projectiles: list = []
+    projectile_cooldown: int = 25 #En ticks
+    player1_projectile_cooldown: int = 0
+    player2_projectile_cooldown: int = 0
 
     #Pantalla
-    screen_width = 1920
-    screen_height = 1080
+    screen_width: int = 1920
+    screen_height: int = 1080
     
-    screen = pygame.display.set_mode((screen_width, screen_height))
+    fullscreen: bool = True
+    
+    screen: pygame.Surface = pygame.display.set_mode((screen_width, screen_height))
     
     pygame.display.set_caption("super bert bros (please don't sue me nintendo)")
     pygame.display.set_icon(pygame.image.load("assets/images/icon.png"))
 
     #Superficie
-    surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+    surface: pygame.Surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
 
     #Volumen inicial
-    volume = 1
-    music_volume = 1
+    volume: float = 1
+    music_volume: float = 1
 
     #Dejar que el jugador seleccione los personajes deseados
-    characters = character_selection_screen("Player 1", "random", "Player 2", "random")
+    characters: tuple = character_selection_screen("Player 1", "random", "#FF0000", "Player 2", "random", "#0000FF")
 
     #Crear grupos de sprites y los jugadores
-    players = pygame.sprite.Group()
+    players: pygame.sprite.Group = pygame.sprite.Group()
     
-    player1 = Player(640, 0, characters[0], characters[2])
-    player2 = Player(1080, 0, characters[1], characters[3])
+    player1: Player = Player(640, 0, characters[0], characters[2], characters[4])
+    player2: Player = Player(1080, 0, characters[1], characters[3], characters[5])
 
     players.add(player1, player2)
     
     #Crear las plataformas
-    platforms = (
+    platforms: tuple = (
         Platform(360, 500, 1200, 300, "big"),
         Platform(640, 250, 200, 30, "small"),
         Platform(1080, 250, 200, 30, "small")
@@ -76,8 +82,13 @@ def main():
     pygame.mixer.music.set_volume(0.07)
     pygame.mixer.music.play(0)
 
-    #Bucle del juego (lo que pasa cada tick - 60 veces por segundo)
+    #Bucle del juego (lo que pasa cada tick)
     while True:
+        
+        #Delta time (actualizar de manera constante independientemente de los FPS)
+        now = time.time()
+        deltaTime = now - prev_time
+        prev_time = now
 
         #Si el juego está pausado, dibujar el menú de pausa y pausar la música
         if pause:
@@ -94,6 +105,13 @@ def main():
             elif event.type == pygame.KEYDOWN: #pulsación de teclas
                 if event.key == K_pause: #pausa
                     pause = not pause
+                
+                elif event.key == K_fullscreen: #pantalla completa
+                    if fullscreen:
+                        pygame.display.set_mode((screen_width - 10, screen_height - 10))
+                    else:
+                        pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+                    fullscreen = not fullscreen
                     
                 elif event.key == K_hitbox: #dibujar hitboxes
                     hitbox = not hitbox
@@ -114,7 +132,7 @@ def main():
                         projectile_x = player1.rect.x + 20
                         
                     player1_projectile_cooldown = projectile_cooldown
-                    player1_projectiles.append(Projectile(projectile_x, player1.rect.y, player1.facing, players))
+                    player1_projectiles.append(Projectile(projectile_x, player1.rect.y, player1.facing))
                     
                 elif event.key == K_player2_projectile and not pause and player2_projectile_cooldown <= 0: # proyectiles de jugador 2
                     pygame.mixer.Sound.play(projectile_sound)
@@ -126,7 +144,7 @@ def main():
                         projectile_x = player2.rect.x + 20
                         
                     player2_projectile_cooldown = projectile_cooldown
-                    player2_projectiles.append(Projectile(projectile_x, player2.rect.y, player2.facing, players))
+                    player2_projectiles.append(Projectile(projectile_x, player2.rect.y, player2.facing))
                     
                 elif event.key == K_quit: #cerrar el juego por medio de la pulsación de la tecla de cerrado
                     pygame.quit()
@@ -147,9 +165,9 @@ def main():
                 
                 #Cambiar personajes
                 if change_characters.collidepoint(event.pos):
-                    characters = character_selection_screen(player1.name, player1.character["name"], player2.name, player2.character["name"])
-                    player1.__init__(player1.rect.x, player1.rect.y, characters[0], characters[2])
-                    player2.__init__(player2.rect.x, player2.rect.y, characters[1], characters[3])
+                    characters = character_selection_screen(player1.name, player1.character["name"], player1.color, player2.name, player2.character["name"], player2.color)
+                    player1.__init__(player1.rect.x, player1.rect.y, characters[0], characters[2], characters[4])
+                    player2.__init__(player2.rect.x, player2.rect.y, characters[1], characters[3], characters[5])
                 
                 #Ajustar volumen
                 if change_volume_button.collidepoint(event.pos):
@@ -238,7 +256,7 @@ def main():
                 player2_projectiles.pop(0)
 
             #Actualizar jugadores
-            players.update(platforms) 
+            players.update(platforms, deltaTime) 
 
             #Vidas y muerte
             for player in players:
@@ -295,8 +313,11 @@ def main():
         screen.blit(player1.icon, (480, 840))
         
         #Nombre de jugador 1
-        pygame.draw.rect(screen, WHITE, (480, 950, 150, 45), 0, 8)
-        screen.blit(font.render(f"{player1.name}", True, BLACK), (490, 955))
+        player1_name_surface = font.render(player1.name, True, player1.color)
+        player1_text_width = player1_name_surface.get_width()
+        player1_text_width += 20 #añadir padding (espacio a los lados)
+        pygame.draw.rect(screen, WHITE, (480, 950, player1_text_width, 45), 0, 8)
+        screen.blit(player1_name_surface, (490, 955))
         
         #Vida de jugador 1
         if player1.lives >= 0:
@@ -323,8 +344,11 @@ def main():
         screen.blit(player2.icon, (1315, 840))
         
         #Nombre de jugador 2
-        pygame.draw.rect(screen, WHITE, (1315, 950, 150, 45), 0, 8)
-        screen.blit(font.render(f"{player2.name}", True, BLACK), (1325, 955))
+        player2_name_surface = font.render(player2.name, True, player2.color)
+        player2_text_width = player2_name_surface.get_width()
+        player2_text_width += 20 #añadir padding (espacio a los lados)
+        pygame.draw.rect(screen, WHITE, (1315, 950, player2_text_width, 45), 0, 8)
+        screen.blit(player2_name_surface, (1325, 955))
         
         #Vida de jugador 2
         if player2.lives >= 0:
@@ -352,6 +376,18 @@ def main():
         
         #Jugadores
         players.draw(screen)
+        
+        #Etiquetas de nombre para los jugadores
+        for player in players:
+            player_nametag = small_font.render(player.name, True, hex_to_rgb(player.color))
+            player_name_width = player_nametag.get_width() + 20
+            player_name_height = 30
+            
+            player_name_x = player.rect.x + (player.rect.width // 2) - (player_name_width // 2)
+            player_name_y = player.rect.y - player_name_height - 10
+            
+            pygame.draw.rect(screen, WHITE, (player_name_x, player_name_y, player_name_width, player_name_height), 0, 8)
+            screen.blit(player_nametag, (player_name_x + 10, player_name_y + 2))
 
         #Proyectiles
         for projectile in player1_projectiles:
@@ -377,7 +413,7 @@ def main():
         #Superficie gris semi-transparente
         if pause:
             screen.blit(surface, (0, 0))
-
-        #Actualizar juego a 60 FPS
+            
+        #Actualizar juego
         pygame.display.update()
-        dt = clock.tick(FPS) / 1000
+        clock.tick(FPS) #de momento voy a mantener los FPS fijados a 60 para no romper nada más

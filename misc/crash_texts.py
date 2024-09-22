@@ -1,6 +1,6 @@
 import random
 
-#Easter egg copiado de Minecraft.
+#Easter egg copiado de Minecraft. No me juzgues. Me aburro mucho.
 
 texts = [
     "Who set us up the TNT?",

@@ -1,15 +1,29 @@
 ------------------------------------------------------
--------- HISTORIAL DE CAMBIOS v1.0 [16/IV/24] --------
+-------- HISTORIAL DE CAMBIOS v1.1 [22/IX/24] --------
 ------------------------------------------------------
 
 
 Agregado:
-    El juego
+    Algunos cambios de optimización y legibilidad del código. Esto incluye declaración de tipos en la mayor parte de las variables y métodos. No afecta el jugador pero quería ponerlo aquí.
+    Intento de delta time
+    Jump buffering (poder saltan aún haber presionado el botón de espacio demasiado pronto): 0.1 segundos (100 ms)
+    Límite de carácteres a los nombres de los jugadores: 16
+    Ahora la caja donde se indica el nombre del jugador cambia de tamaño dependiendo de la longitud de este
+    Organizado la carpeta de recursos
+    Nerfeado el daño de proyectil de Barcos: 10 -> 6
+    Arreglado un bug relacionado al empuje de personajes
+    Arreglado el bug donde a pesar de no cambiar nada al cambiar personajes en la partida, se reelegían los personajes al azar
+    Algunos de los sprites de Alsexito (me dijo que los iba a hacer él pero resulta que nada)
+    Etiquetas de nombre que siguen a su jugador durante la partida para poder identificarlos mejor
+    Opción para asignar un color a cada jugador. Este color se usa para dibujar su nombre tanto en la etiqueta que llevan encima como en la parte inferior, donde se vé la vida.
+
 
 Por añadir:
-    Sprites de Alsexito (qué palo tú)
-    Jump buffering
-    Delta time
+    Sé que parece una gilipollez, pero me gustaría añadir una animación donde Alsexito mueve las cejas al correr. Mi juego, yo decido
+    Organizar un poco algunos archivos, donde todo está hecho una mierda y funciona porque Dios quiso
+    Evitar conflicto de colores, que ambos jugadores no puedan llevar el mismo color
+    Delta time (pero funcional)
+    Eliminar sistema de puntos de vida y pasar a usar sistema de porcentaje como en el Smash
     Tooltips para la ventana de selección de personajes
     Parries
     Más escenarios
@@ -22,13 +36,15 @@ Por añadir:
 
 
 Bugs ya conocidos:
-    Cuando cambias de personajes y no cambias nada, en vez de seguir con el mismo personaje de antes, seleccionas uno al azar.
-    Se pueden hacer saltos dobles cuando espameas el botón de saltar muy rápido.
+    Resulta que por algún motivo ahora los personajes pueden aparecer debajo de las plataformes en vez de encima. Desconozco el motivo.
+    Delta time hace que cuanto mayor sean los FPS menos se mueven los jugadores y viceversa
+    Saltar a veces no funciona (no sé si es mi teclado o el juego la verdad)
+    Se pueden realizar saltos dobles con suficiente timing, esto se debe a que para saltar necesitas tener un momentum inicial de 0, y cuando saltas, antes de caer por unos breves milisegundos dejas de moverte en el aire.
     Cuando tocas la parte lateral de una plataforma, te teletransporta encima de ella.
     Las hitboxes no se alinean perfectamente cuando un jugador se está moviendo o saltando.
     Los proyectiles pueden traspasar la plataforma grande.
-    Por algún motivo que desconozco el juego puede crashear con código 3489660927.
+    Por algún motivo que desconozco el juego puede crashear con código 3489660927. Relacionado con proyectiles. Creo.
 
 
 Frase de la semana:
-    MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM - un microondas
+    me gusta el atun - posiblemente yo

@@ -4,15 +4,15 @@ import tkinter as tk
 from tkinter import ttk
 
 
-def change_volume(volume, music_volume):
+def change_volume(volume:float, music_volume:float) -> tuple[float, float]:
     """Abrir una ventana de tkinter para dejar que el jugador ajuste el volumen."""
 
-    def set_volume(volume):
+    def set_volume(volume:float) -> None:
         global final_volume
         final_volume = round(float(volume), 1)
         volume_text.config(text=f"Volumen de SFX: {final_volume}")
     
-    def set_music_volume(volume):
+    def set_music_volume(volume:float) -> None:
         global final_music_volume
         final_music_volume = round(float(volume), 1)
         music_volume_text.config(text=f"Volumen de música: {final_music_volume}")
@@ -50,4 +50,5 @@ def change_volume(volume, music_volume):
 
     root.mainloop()
     
+    #Devolver los valores finales de volumen
     return final_volume, final_music_volume

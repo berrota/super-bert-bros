@@ -3,28 +3,33 @@ import screeninfo
 
 pygame.init()
 
-#Sprites
-platform_image = pygame.image.load("assets/images/platform.png")
-small_platform_image = pygame.image.load("assets/images/small_platform.png")
+####################################### SPRITES #######################################
 
-projectile_image_right = pygame.image.load("assets/images/projectile.png")
+platform_image = pygame.image.load("assets/images/platform/platform_big.png")
+small_platform_image = pygame.image.load("assets/images/platform/platform_small.png")
+
+projectile_image_right = pygame.image.load("assets/images/projectile/projectile.png")
 projectile_image_left = pygame.transform.flip(projectile_image_right, True, False)
 
-heart_image = pygame.image.load("assets/images/heart.png")
+heart_image = pygame.image.load("assets/images/ui/heart.png")
 
 for m in screeninfo.get_monitors():
     width = m.width
     height = m.height
 
-bg_image = pygame.image.load("assets/images/background.png")
+bg_image = pygame.image.load("assets/images/ui/background.png")
 bg_image = pygame.transform.scale(bg_image, (width, height))
 
-#Fuentes de letra
+
+####################################### FUENTES DE LETRA #######################################
+
 title_font = pygame.font.Font(None, 80)
 font = pygame.font.Font(None, 50)
+small_font = pygame.font.Font(None, 35)
 
 
-#Sonido
+####################################### EFECTOS DE SONIDO Y MÚSICA #######################################
+
 jump_sound = pygame.mixer.Sound("assets/sound/jump.wav")
 jump_sound2 = pygame.mixer.Sound("assets/sound/jump2.wav")
 death_sound = pygame.mixer.Sound("assets/sound/death.wav")

@@ -3,3 +3,6 @@ crash_logs/*.txt
 screen/__pycache__
 misc/__pycache__
 objects/__pycache__
+dist
+build
+*.spec

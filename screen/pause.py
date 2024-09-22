@@ -2,7 +2,7 @@ import pygame
 
 from misc.files import font, title_font
 
-def draw_pause_screen(surface, screen_width, screen_height):
+def draw_pause_screen(surface, screen_width, screen_height) -> tuple[pygame.Rect, pygame.Rect, pygame.Rect, pygame.Rect]:
     """Dibujar el menú de pausa."""
 
     #Superficies

@@ -1,22 +1,20 @@
 #Si quieres cambiar las stats de algún personaje, utiliza esto como un índice:
 """
-
 name: nombre
 description: descripción
 health: puntos de vida
-damage: daño
+damage: daño melee (de momento inútil)
 projectile_damage: daño de proyectil
 velocity: velocidad
 jump_velocity: intensidad de salto
-crit_chance: probabilidad de golpe crítico
+crit_chance: probabilidad de golpe crítico (de momento inútil)
 gravity: intensidad de la gravedad
 terminal_velocity: máxima velocidad alcanzable
-weight: peso (sirve para calcular el empuje de un golpe)
+weight: peso (sirve para calcular el empuje de un golpe). cuanto menor sea mayor empuje recibirá
 walking_sprites_right: sprites de caminar hacia la derecha
 walking_sprites_left: sprites de caminar hacia la izquierda
 ... lo mismo con jump_sprites, idle_sprite, attack_sprite y damage_sprite
 icon: icono que se muestra en la parte inferior de la pantalla
-
 """
 
 import pygame
@@ -42,28 +40,28 @@ BERT = {
     "terminal_velocity": 20,
     "weight": 1,
     "walking_sprites_right": [
-        (pygame.image.load("assets/images/bert/walk/0.png")),
-        (pygame.image.load("assets/images/bert/walk/1.png")),
-        (pygame.image.load("assets/images/bert/walk/2.png")),
-        (pygame.image.load("assets/images/bert/walk/3.png")),
-        (pygame.image.load("assets/images/bert/walk/4.png"))
+        (pygame.image.load("assets/images/characters/bert/walk/0.png")),
+        (pygame.image.load("assets/images/characters/bert/walk/1.png")),
+        (pygame.image.load("assets/images/characters/bert/walk/2.png")),
+        (pygame.image.load("assets/images/characters/bert/walk/3.png")),
+        (pygame.image.load("assets/images/characters/bert/walk/4.png"))
     ],
     "walking_sprites_left": [],
     "jumping_sprites_right": [
-        (pygame.image.load("assets/images/bert/jump/0.png")),
-        (pygame.image.load("assets/images/bert/jump/1.png")),
-        (pygame.image.load("assets/images/bert/jump/2.png")),
-        (pygame.image.load("assets/images/bert/jump/3.png")),
-        (pygame.image.load("assets/images/bert/jump/4.png"))
+        (pygame.image.load("assets/images/characters/bert/jump/0.png")),
+        (pygame.image.load("assets/images/characters/bert/jump/1.png")),
+        (pygame.image.load("assets/images/characters/bert/jump/2.png")),
+        (pygame.image.load("assets/images/characters/bert/jump/3.png")),
+        (pygame.image.load("assets/images/characters/bert/jump/4.png"))
     ],
     "jumping_sprites_left": [],
-    "idle_sprite_right": [(pygame.image.load("assets/images/bert/idle/0.png"))],
+    "idle_sprite_right": [(pygame.image.load("assets/images/characters/bert/idle/0.png"))],
     "idle_sprite_left": [],
-    "attack_sprite_right": [(pygame.image.load("assets/images/bert/attack/0.png"))],
+    "attack_sprite_right": [(pygame.image.load("assets/images/characters/bert/attack/0.png"))],
     "attack_sprite_left": [],
-    "damage_sprite_right": [(pygame.image.load("assets/images/bert/damage/0.png"))],
+    "damage_sprite_right": [(pygame.image.load("assets/images/characters/bert/damage/0.png"))],
     "damage_sprite_left": [],
-    "icon": pygame.image.load("assets/images/bert/icon.png")
+    "icon": pygame.image.load("assets/images/characters/bert/icon.png")
 }
 
 for sprite in BERT["walking_sprites_right"]:
@@ -98,28 +96,28 @@ BERROTA = {
     "terminal_velocity": 17,
     "weight": 1.5,
     "walking_sprites_right": [
-        (pygame.image.load("assets/images/berrota/walk/0.png")),
-        (pygame.image.load("assets/images/berrota/walk/1.png")),
-        (pygame.image.load("assets/images/berrota/walk/2.png")),
-        (pygame.image.load("assets/images/berrota/walk/3.png")),
-        (pygame.image.load("assets/images/berrota/walk/4.png"))
+        (pygame.image.load("assets/images/characters/berrota/walk/0.png")),
+        (pygame.image.load("assets/images/characters/berrota/walk/1.png")),
+        (pygame.image.load("assets/images/characters/berrota/walk/2.png")),
+        (pygame.image.load("assets/images/characters/berrota/walk/3.png")),
+        (pygame.image.load("assets/images/characters/berrota/walk/4.png"))
     ],
     "walking_sprites_left": [],
     "jumping_sprites_right": [
-        (pygame.image.load("assets/images/berrota/jump/0.png")),
-        (pygame.image.load("assets/images/berrota/jump/1.png")),
-        (pygame.image.load("assets/images/berrota/jump/2.png")),
-        (pygame.image.load("assets/images/berrota/jump/3.png")),
-        (pygame.image.load("assets/images/berrota/jump/4.png"))
+        (pygame.image.load("assets/images/characters/berrota/jump/0.png")),
+        (pygame.image.load("assets/images/characters/berrota/jump/1.png")),
+        (pygame.image.load("assets/images/characters/berrota/jump/2.png")),
+        (pygame.image.load("assets/images/characters/berrota/jump/3.png")),
+        (pygame.image.load("assets/images/characters/berrota/jump/4.png"))
     ],
     "jumping_sprites_left": [],
-    "idle_sprite_right": [(pygame.image.load("assets/images/berrota/idle/0.png"))],
+    "idle_sprite_right": [(pygame.image.load("assets/images/characters/berrota/idle/0.png"))],
     "idle_sprite_left": [],
-    "attack_sprite_right": [(pygame.image.load("assets/images/berrota/attack/0.png"))],
+    "attack_sprite_right": [(pygame.image.load("assets/images/characters/berrota/attack/0.png"))],
     "attack_sprite_left": [],
-    "damage_sprite_right": [(pygame.image.load("assets/images/berrota/damage/0.png"))],
+    "damage_sprite_right": [(pygame.image.load("assets/images/characters/berrota/damage/0.png"))],
     "damage_sprite_left": [],
-    "icon": pygame.image.load("assets/images/berrota/icon.png")
+    "icon": pygame.image.load("assets/images/characters/berrota/icon.png")
 }
 
 for sprite in BERROTA["walking_sprites_right"]:
@@ -154,28 +152,28 @@ LORC = {
     "terminal_velocity": 25,
     "weight": 0.5,
     "walking_sprites_right": [
-        (pygame.image.load("assets/images/lorc/walk/0.png")),
-        (pygame.image.load("assets/images/lorc/walk/1.png")),
-        (pygame.image.load("assets/images/lorc/walk/2.png")),
-        (pygame.image.load("assets/images/lorc/walk/3.png")),
-        (pygame.image.load("assets/images/lorc/walk/4.png"))
+        (pygame.image.load("assets/images/characters/lorc/walk/0.png")),
+        (pygame.image.load("assets/images/characters/lorc/walk/1.png")),
+        (pygame.image.load("assets/images/characters/lorc/walk/2.png")),
+        (pygame.image.load("assets/images/characters/lorc/walk/3.png")),
+        (pygame.image.load("assets/images/characters/lorc/walk/4.png"))
     ],
     "walking_sprites_left": [],
     "jumping_sprites_right": [
-        (pygame.image.load("assets/images/lorc/jump/0.png")),
-        (pygame.image.load("assets/images/lorc/jump/1.png")),
-        (pygame.image.load("assets/images/lorc/jump/2.png")),
-        (pygame.image.load("assets/images/lorc/jump/3.png")),
-        (pygame.image.load("assets/images/lorc/jump/4.png"))
+        (pygame.image.load("assets/images/characters/lorc/jump/0.png")),
+        (pygame.image.load("assets/images/characters/lorc/jump/1.png")),
+        (pygame.image.load("assets/images/characters/lorc/jump/2.png")),
+        (pygame.image.load("assets/images/characters/lorc/jump/3.png")),
+        (pygame.image.load("assets/images/characters/lorc/jump/4.png"))
     ],
     "jumping_sprites_left": [],
-    "idle_sprite_right": [(pygame.image.load("assets/images/lorc/idle/0.png"))],
+    "idle_sprite_right": [(pygame.image.load("assets/images/characters/lorc/idle/0.png"))],
     "idle_sprite_left": [],
-    "attack_sprite_right": [(pygame.image.load("assets/images/lorc/attack/0.png"))],
+    "attack_sprite_right": [(pygame.image.load("assets/images/characters/lorc/attack/0.png"))],
     "attack_sprite_left": [],
-    "damage_sprite_right": [(pygame.image.load("assets/images/lorc/damage/0.png"))],
+    "damage_sprite_right": [(pygame.image.load("assets/images/characters/lorc/damage/0.png"))],
     "damage_sprite_left": [],
-    "icon": pygame.image.load("assets/images/lorc/icon.png")
+    "icon": pygame.image.load("assets/images/characters/lorc/icon.png")
 }
 
 for sprite in LORC["walking_sprites_right"]:
@@ -210,28 +208,28 @@ JORDI = {
     "terminal_velocity": 17,
     "weight": 1.2,
     "walking_sprites_right": [
-        (pygame.image.load("assets/images/jordi/walk/0.png")),
-        (pygame.image.load("assets/images/jordi/walk/1.png")),
-        (pygame.image.load("assets/images/jordi/walk/2.png")),
-        (pygame.image.load("assets/images/jordi/walk/3.png")),
-        (pygame.image.load("assets/images/jordi/walk/4.png"))
+        (pygame.image.load("assets/images/characters/jordi/walk/0.png")),
+        (pygame.image.load("assets/images/characters/jordi/walk/1.png")),
+        (pygame.image.load("assets/images/characters/jordi/walk/2.png")),
+        (pygame.image.load("assets/images/characters/jordi/walk/3.png")),
+        (pygame.image.load("assets/images/characters/jordi/walk/4.png"))
     ],
     "walking_sprites_left": [],
     "jumping_sprites_right": [
-        (pygame.image.load("assets/images/jordi/jump/0.png")),
-        (pygame.image.load("assets/images/jordi/jump/1.png")),
-        (pygame.image.load("assets/images/jordi/jump/2.png")),
-        (pygame.image.load("assets/images/jordi/jump/3.png")),
-        (pygame.image.load("assets/images/jordi/jump/4.png"))
+        (pygame.image.load("assets/images/characters/jordi/jump/0.png")),
+        (pygame.image.load("assets/images/characters/jordi/jump/1.png")),
+        (pygame.image.load("assets/images/characters/jordi/jump/2.png")),
+        (pygame.image.load("assets/images/characters/jordi/jump/3.png")),
+        (pygame.image.load("assets/images/characters/jordi/jump/4.png"))
     ],
     "jumping_sprites_left": [],
-    "idle_sprite_right": [(pygame.image.load("assets/images/jordi/idle/0.png"))],
+    "idle_sprite_right": [(pygame.image.load("assets/images/characters/jordi/idle/0.png"))],
     "idle_sprite_left": [],
-    "attack_sprite_right": [(pygame.image.load("assets/images/jordi/attack/0.png"))],
+    "attack_sprite_right": [(pygame.image.load("assets/images/characters/jordi/attack/0.png"))],
     "attack_sprite_left": [],
-    "damage_sprite_right": [(pygame.image.load("assets/images/jordi/damage/0.png"))],
+    "damage_sprite_right": [(pygame.image.load("assets/images/characters/jordi/damage/0.png"))],
     "damage_sprite_left": [],
-    "icon": pygame.image.load("assets/images/jordi/icon.png")
+    "icon": pygame.image.load("assets/images/characters/jordi/icon.png")
 }
 
 for sprite in JORDI["walking_sprites_right"]:
@@ -254,10 +252,10 @@ JORDI["damage_sprite_left"] = [(pygame.transform.flip(JORDI["damage_sprite_right
 
 BARCOS = {
     "name": "Barcos",
-    "description": "Un madafaquin gnomo, ten cuidado o te morderá los tobillos.",
+    "description": "Habilidad especial: morderte los tobillos.",
     "health": 80,
     "damage": 9,
-    "projectile_damage": 10,
+    "projectile_damage": 6,
     "velocity": 10,
     "jump_velocity": 12,
     "crit_chance": 0.6,
@@ -265,28 +263,28 @@ BARCOS = {
     "terminal_velocity": 17,
     "weight": 1,
     "walking_sprites_right": [
-        (pygame.image.load("assets/images/barcos/walk/0.png")),
-        (pygame.image.load("assets/images/barcos/walk/1.png")),
-        (pygame.image.load("assets/images/barcos/walk/2.png")),
-        (pygame.image.load("assets/images/barcos/walk/3.png")),
-        (pygame.image.load("assets/images/barcos/walk/4.png"))
+        (pygame.image.load("assets/images/characters/barcos/walk/0.png")),
+        (pygame.image.load("assets/images/characters/barcos/walk/1.png")),
+        (pygame.image.load("assets/images/characters/barcos/walk/2.png")),
+        (pygame.image.load("assets/images/characters/barcos/walk/3.png")),
+        (pygame.image.load("assets/images/characters/barcos/walk/4.png"))
     ],
     "walking_sprites_left": [],
     "jumping_sprites_right": [
-        (pygame.image.load("assets/images/barcos/jump/0.png")),
-        (pygame.image.load("assets/images/barcos/jump/1.png")),
-        (pygame.image.load("assets/images/barcos/jump/2.png")),
-        (pygame.image.load("assets/images/barcos/jump/3.png")),
-        (pygame.image.load("assets/images/barcos/jump/4.png"))
+        (pygame.image.load("assets/images/characters/barcos/jump/0.png")),
+        (pygame.image.load("assets/images/characters/barcos/jump/1.png")),
+        (pygame.image.load("assets/images/characters/barcos/jump/2.png")),
+        (pygame.image.load("assets/images/characters/barcos/jump/3.png")),
+        (pygame.image.load("assets/images/characters/barcos/jump/4.png"))
     ],
     "jumping_sprites_left": [],
-    "idle_sprite_right": [(pygame.image.load("assets/images/barcos/idle/0.png"))],
+    "idle_sprite_right": [(pygame.image.load("assets/images/characters/barcos/idle/0.png"))],
     "idle_sprite_left": [],
-    "attack_sprite_right": [(pygame.image.load("assets/images/barcos/attack/0.png"))],
+    "attack_sprite_right": [(pygame.image.load("assets/images/characters/barcos/attack/0.png"))],
     "attack_sprite_left": [],
-    "damage_sprite_right": [(pygame.image.load("assets/images/barcos/damage/0.png"))],
+    "damage_sprite_right": [(pygame.image.load("assets/images/characters/barcos/damage/0.png"))],
     "damage_sprite_left": [],
-    "icon": pygame.image.load("assets/images/barcos/icon.png")
+    "icon": pygame.image.load("assets/images/characters/barcos/icon.png")
 }
 
 for sprite in BARCOS["walking_sprites_right"]:
@@ -309,39 +307,39 @@ BARCOS["damage_sprite_left"] = [(pygame.transform.flip(BARCOS["damage_sprite_rig
 
 ALSEXITO = {
     "name": "Alsexito",
-    "description": "Te parecerá que está petado, pero la realidad es que unos negros le han petado el culo.",
+    "description": "En cuanto menos de lo esperas ya te está dando por detrás",
     "health": 170,
     "damage": 30,
     "projectile_damage": 1,
-    "velocity": 3.2,
+    "velocity": 2.8,
     "jump_velocity": 8,
     "crit_chance": 0.69420,
-    "gravity": 0.72,
+    "gravity": 0.7,
     "terminal_velocity": 30,
     "weight": 2,
     "walking_sprites_right": [
-        (pygame.image.load("assets/images/alsexito/walk/0.png")),
-        (pygame.image.load("assets/images/alsexito/walk/1.png")),
-        (pygame.image.load("assets/images/alsexito/walk/2.png")),
-        (pygame.image.load("assets/images/alsexito/walk/3.png")),
-        (pygame.image.load("assets/images/alsexito/walk/4.png"))
+        (pygame.image.load("assets/images/characters/alsexito/walk/0.png")),
+        (pygame.image.load("assets/images/characters/alsexito/walk/1.png")),
+        (pygame.image.load("assets/images/characters/alsexito/walk/2.png")),
+        (pygame.image.load("assets/images/characters/alsexito/walk/3.png")),
+        (pygame.image.load("assets/images/characters/alsexito/walk/4.png"))
     ],
     "walking_sprites_left": [],
     "jumping_sprites_right": [
-        (pygame.image.load("assets/images/alsexito/jump/0.png")),
-        (pygame.image.load("assets/images/alsexito/jump/1.png")),
-        (pygame.image.load("assets/images/alsexito/jump/2.png")),
-        (pygame.image.load("assets/images/alsexito/jump/3.png")),
-        (pygame.image.load("assets/images/alsexito/jump/4.png"))
+        (pygame.image.load("assets/images/characters/alsexito/jump/0.png")),
+        (pygame.image.load("assets/images/characters/alsexito/jump/1.png")),
+        (pygame.image.load("assets/images/characters/alsexito/jump/2.png")),
+        (pygame.image.load("assets/images/characters/alsexito/jump/3.png")),
+        (pygame.image.load("assets/images/characters/alsexito/jump/4.png"))
     ],
     "jumping_sprites_left": [],
-    "idle_sprite_right": [(pygame.image.load("assets/images/alsexito/idle/0.png"))],
+    "idle_sprite_right": [(pygame.image.load("assets/images/characters/alsexito/idle/0.png"))],
     "idle_sprite_left": [],
-    "attack_sprite_right": [(pygame.image.load("assets/images/alsexito/attack/0.png"))],
+    "attack_sprite_right": [(pygame.image.load("assets/images/characters/alsexito/attack/0.png"))],
     "attack_sprite_left": [],
-    "damage_sprite_right": [(pygame.image.load("assets/images/alsexito/damage/0.png"))],
+    "damage_sprite_right": [(pygame.image.load("assets/images/characters/alsexito/damage/0.png"))],
     "damage_sprite_left": [],
-    "icon": pygame.image.load("assets/images/alsexito/icon.png")
+    "icon": pygame.image.load("assets/images/characters/alsexito/icon.png")
 }
 
 for sprite in ALSEXITO["walking_sprites_right"]:

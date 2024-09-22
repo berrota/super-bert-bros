@@ -24,6 +24,8 @@ pedazo de juego
 
 > 0 para cerrar el juego (también lo puedes hacer desde el menú de pausa)
 
+> f11 para pantalla completa
+
 ### para cambiar los controles, ve al [archivo key_bindings.py](misc/key_bindings.py) y cámbialos ahí.
 
 
