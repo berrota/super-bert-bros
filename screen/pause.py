@@ -2,6 +2,8 @@ import pygame
 
 from misc.files import font, title_font
 
+from misc.translator import translate
+
 def draw_pause_screen(surface, screen_width, screen_height) -> tuple[pygame.Rect, pygame.Rect, pygame.Rect, pygame.Rect]:
     """Dibujar el menú de pausa."""
 
@@ -16,11 +18,11 @@ def draw_pause_screen(surface, screen_width, screen_height) -> tuple[pygame.Rect
     change_volume = pygame.draw.rect(surface, "white", (1000, 700, 600, 150), 0, 10)
 
     #Texto
-    surface.blit(title_font.render("Juego pausado.", True, "white"), (750, 190))
-    surface.blit(font.render("Volver", True, "black"), (520, 505))
-    surface.blit(font.render("Cerrar", True, "black"), (1250, 505))
-    surface.blit(font.render("Cambiar personajes", True, "black"), (435, 755))
-    surface.blit(font.render("Ajustar volumen", True, "black"), (1180, 755))
+    surface.blit(title_font.render(translate("pause.title"), True, "white"), (750, 190))
+    surface.blit(font.render(translate("pause.back"), True, "black"), (520, 505))
+    surface.blit(font.render(translate("pause.quit"), True, "black"), (1250, 505))
+    surface.blit(font.render(translate("pause.change_character"), True, "black"), (435, 755))
+    surface.blit(font.render(translate("pause.adjust_volume"), True, "black"), (1180, 755))
 
     #Devolver los botones para que se puedan dibujar en pantalla
     return resume, quit, change_characters, change_volume

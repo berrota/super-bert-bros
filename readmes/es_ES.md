@@ -1,7 +1,7 @@
 <div align="center">
 
-[![English](https://img.shields.io/badge/English-000000?style=for-the-badge&logo=flag-icon-css&logoColor=ffffff)](readmes/en_US.md)
-[![Español](https://img.shields.io/badge/Español-000000?style=for-the-badge&logo=flag-icon-css&logoColor=ffffff)](readmes/es_ES.md)
+[![English](https://img.shields.io/badge/English-000000?style=for-the-badge&logo=flag-icon-css&logoColor=ffffff)](en_US.md)
+[![Español](https://img.shields.io/badge/Español-000000?style=for-the-badge&logo=flag-icon-css&logoColor=ffffff)](es_ES.md)
 
 </div>
 

@@ -5,7 +5,7 @@ pygame.init()
 
 ####################################### SPRITES #######################################
 
-platform_image = pygame.image.load("assets/images/platform/platform_big.png")
+big_platform_image = pygame.image.load("assets/images/platform/platform_big.png")
 small_platform_image = pygame.image.load("assets/images/platform/platform_small.png")
 
 projectile_image_right = pygame.image.load("assets/images/projectile/projectile.png")

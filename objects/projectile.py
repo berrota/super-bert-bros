@@ -12,30 +12,26 @@ class Projectile:
         self.start_pos: int = x
         self.max_displacement: int = 960
         self.velocity: int = 13
-        self.direction: Literal["left", "reight"] = direction
-        self.image: pygame.Surface = None
+        self.direction: Literal["left", "right"] = direction
+        self.image: pygame.Surface = projectile_image_left if direction == "left" else projectile_image_right
+    
+    def move(self, dt:float) -> None:
+        """Moverse constantemente hacia la dirección en la que mira el jugador que lo ha lanzado."""
         
         if self.direction == "left":
-            self.image = projectile_image_left
+            self.rect.x -= self.velocity * dt / 0.016
             
         elif self.direction == "right":
-            self.image = projectile_image_right
-            
+            self.rect.x += self.velocity * dt / 0.016
+    
+    def is_out_of_bounds(self) -> bool:
+        """Verificar si el proyectil se ha movido más de lo que debe."""
+        return abs(self.rect.x - self.start_pos) > self.max_displacement
     
     def draw(self, screen:pygame.Surface) -> None:
         """Dibujar el proyectil en pantalla."""
         
-        self.move()
         screen.blit(self.image, (self.rect.x, self.rect.y))
-    
-    def move(self) -> None:
-        """Moverse constantemente hacia la dirección en la que mira el jugador que lo ha lanzado."""
-        
-        if self.direction == "left":
-            self.rect.x -= self.velocity
-            
-        elif self.direction == "right":
-            self.rect.x += self.velocity
     
     def draw_hitboxes(self, screen:pygame.Surface) -> None:
         """Dibujar las hitboxes de los proyectiles en pantalla."""

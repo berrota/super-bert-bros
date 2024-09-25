@@ -1,0 +1,48 @@
+{   
+    "title": "super bert bros (please don't sue me nintendo)",
+
+    "random.description": "Chooses a random character for you",
+    "bert.description": "average human.",
+    "berrota.description": "Fast skinny fuckboy",
+    "lorc.description": "His only weakness is gravity",
+    "jordi.description": "He's gay. High damage. He's gay.",
+    "barcos.description": "A fucking dwarf that will bite your ankles",
+    "alsexito.description": "When you least expect it he'll surprise you with a buttfuck",
+
+    "player1.name": "Player 1",
+    "player2.name": "Player 2",
+    "random.name": "Random",
+
+    "tie.title": "Suckers",
+    "tie.text": "Both players somehow managed to die in the same fucking tick",
+
+    "first": "1st",
+    "second": "2nd",
+    "using": "using character",
+
+    "ok.ok": "OK",
+    "ok.text": "Click OK to close the game",
+
+    "dead": "DEAD",
+
+    "crash_report": "CRASH REPORT",
+    "at": "at",
+    "error.title": "FATAL ERROR",
+    "error.text": "An unexpected error has happened. A crash report has been saved to ",
+
+    "choose.title": "Character selection",
+    "choose.color": "Select a color for ",
+    "choose.player1": "Player 1 character:",
+    "choose.player2": "Player 2 character:",
+    "choose.begin": "Start game",
+
+    "pause.title": "Game paused",
+    "pause.back": "Back",
+    "pause.quit": "Quit",
+    "pause.change_character": "Change characters",
+    "pause.adjust_volume": "Adjust volume",
+
+    "volume.title": "Adjust volume",
+    "volume.sfx": "SFX volume",
+    "volume.music": "Music volume"
+}

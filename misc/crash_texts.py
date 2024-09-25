@@ -1,7 +1,16 @@
+import datetime
+import os
 import random
+import traceback
+
+from misc.translator import translate
+
+from tkinter import messagebox as msgbox
 
 #Easter egg copiado de Minecraft. No me juzgues. Me aburro mucho.
 
+
+#Textos
 texts = [
     "Who set us up the TNT?",
     "Everything's going to plan. No, really, that was supposed to happen.",
@@ -39,4 +48,37 @@ texts = [
     "But it works on my machine."
 ]
 
-text = random.choice(texts)
+crash_text = random.choice(texts)
+
+
+#Crear reporte
+def create_crash_report() -> None:
+    """Crear reportes con detalles sobre los errores que se han dado. Útil para mí y para cualquier persona que sufra de crasheos."""
+    
+    now = datetime.datetime.now()
+    
+    #Dar el formato del texto
+    crash_report = (
+        f"{translate('crash_report')} {now.year}-{now.month}-{now.day} "
+        f"{translate('at')} {now.strftime("%H:%M:%S")}\n"
+        f"{crash_text}\n\n"
+        f"{traceback.format_exc()}"
+    )
+    
+    #Asegurarse de que la carpeta de reportes existe
+    crash_dir = "crash_logs"
+    if not os.path.exists(crash_dir):
+        os.makedirs(crash_dir)
+        
+    #Nombre del archivo
+    file_name = (
+        f"{crash_dir}/crash-{now.year}-{now.month}-{now.day}_"
+        f"{now.strftime("%H:%M:%S")}.txt"
+    )
+    
+    #Escribir el texto en el archivo
+    with open(file_name, "w") as crash_file:
+        crash_file.write(crash_report)
+    
+    #Hacer saber al usuario que ha ocurrido un error a través de un popup
+    msgbox.showerror(translate("error.title"), translate("error.text") + file_name)

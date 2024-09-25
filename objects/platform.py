@@ -1,23 +1,17 @@
 import pygame
 from typing import Literal
 
-from misc.files import platform_image, small_platform_image
+from misc.files import big_platform_image, small_platform_image
 
 class Platform:
+    """Objeto para las plataformas. Existen dos tipos: Grandes (la principal) y pequeñas (las otras dos que están más elevadas)."""
+    
     def __init__(self, x:int, y:int, w:int, h:int, size:Literal["big", "small"]):
-        """Inicializa la clase de las plataformas."""
-        
         #Diferenciar entre dos tipos de plataformas: grandes (big) y pequeñas (small)
-        self.rect: pygame.Rect = None
-        self.image: pygame.Surface = None
+        self.size: Literal["big", "small"] = size
         
-        if size == "big":
-            self.image = platform_image
-            self.rect = pygame.Rect(x, y, w, h//4)
-            
-        elif size == "small":
-            self.image = small_platform_image
-            self.rect = pygame.Rect(x, y, w, h)
+        self.image: pygame.Surface = big_platform_image if size == "big" else small_platform_image
+        self.rect: pygame.Rect = pygame.Rect(x, y, w, h // 4) if size == "big" else pygame.Rect(x, y, w, h)
         
     def draw(self, screen:pygame.Surface) -> None:
         """Dibuja las plataformas en pantalla."""

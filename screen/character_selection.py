@@ -1,11 +1,14 @@
-from misc.characters import * #Importar jugadores de misc/characters.py
-from misc.tooltips import ToolTip
+from misc.characters import *
 from misc.colors import *
+
+from screen.tooltips import ToolTip
+
+from misc.translator import translate
 
 import random
 import tkinter as tk
-from tkinter import ttk
 from tkinter import colorchooser
+from tkinter import ttk
 from typing import Literal
 
 
@@ -24,7 +27,7 @@ def character_selection_screen(
     player2_color = player2_color_old
     
     characters = [
-        "Al azar",
+        translate("random.name"),
         "Bert", 
         "Lorc", 
         "Berrota", 
@@ -47,9 +50,11 @@ def character_selection_screen(
         #Manejar la selección de personajes
         if player == 1:
             player1_character.set(value)
+            ToolTip(player1_dropdown, get_description_by_name(value))
             
         elif player == 2:
             player2_character.set(value)
+            ToolTip(player2_dropdown, get_description_by_name(value))
             
 
     def get_names() -> None:
@@ -68,7 +73,7 @@ def character_selection_screen(
         #Asignar el color elegido al jugador 1 y cambiar el color del botón
         global player1_color
         
-        color = colorchooser.askcolor(title="Elige un color para " + player1_name)
+        color = colorchooser.askcolor(title=translate("choose.color") + player1_name)
         
         if color[1]:
             player1_color = color[1]
@@ -82,11 +87,10 @@ def character_selection_screen(
         #Asignar el color elegido al jugador 2 y cambiar el color del botón
         global player2_color
         
-        color = colorchooser.askcolor(title="Elige un color para " + player2_name)
+        color = colorchooser.askcolor(title=translate("choose.color") + player2_name)
         
         if color[1]:
             player2_color = color[1]
-            print("color changed to " + player2_color)
         else:
             player2_color = player2_color_old
             
@@ -96,7 +100,7 @@ def character_selection_screen(
     def get_description_by_name(character_name: str) -> dict:
         match character_name:
             case "random":
-                return "Selecciona un personaje al azar"
+                return translate("random.description")
             case "Bert":
                 return BERT["description"]
             case "Lorc":
@@ -116,7 +120,7 @@ def character_selection_screen(
     #Abrir la ventana
     root = tk.Tk()
     
-    root.title("Selección de personajes")
+    root.title(translate("choose.title"))
     root.iconbitmap("assets/images/pengiun.ico")
     root.geometry(f"570x100+720+300")
     root.resizable(False, False)
@@ -126,7 +130,7 @@ def character_selection_screen(
     player2_character = tk.StringVar()
 
     #Jugador 1
-    player1_label = tk.Label(root, text="Personaje de Jugador 1:")
+    player1_label = tk.Label(root, text=translate("choose.player1"))
     player1_label.grid(row=0, column=0, padx=10, pady=5)
 
     player1_dropdown = ttk.Combobox(root, values=characters)
@@ -139,11 +143,11 @@ def character_selection_screen(
     player1_name_entry.grid(row=0, column=2, padx=10, pady=5)
     player1_name_entry.insert(0, player1_name_old)
     
-    player1_color_button = tk.Button(root, width=4, bg=player1_color, command=change_player1_color)
+    player1_color_button = tk.Button(root, width=4, bg=player1_color, command=change_player1_color, relief="flat", borderwidth=0)
     player1_color_button.grid(row=0, column=3)
 
     #Jugador 2  
-    player2_label = tk.Label(root, text="Personaje de Jugador 2:")
+    player2_label = tk.Label(root, text=translate("choose.player2"))
     player2_label.grid(row=1, column=0, padx=10, pady=5)
 
     player2_dropdown = ttk.Combobox(root, values=characters)
@@ -156,11 +160,11 @@ def character_selection_screen(
     player2_name_entry.grid(row=1, column=2, padx=10, pady=5)
     player2_name_entry.insert(0, player2_name_old)
     
-    player2_color_button = tk.Button(root, width=4, bg=player2_color, command=change_player2_color)
+    player2_color_button = tk.Button(root, width=4, bg=player2_color, command=change_player2_color, relief="flat", borderwidth=0)
     player2_color_button.grid(row=1, column=3)
 
     #Botón para dar comienzo a la partida
-    ok_button = ttk.Button(root, text="Iniciar partida", command=get_names)
+    ok_button = ttk.Button(root, text=translate("choose.begin"), command=get_names)
     ok_button.grid(row=2, column=1, padx=10, pady=5)
 
     root.mainloop()

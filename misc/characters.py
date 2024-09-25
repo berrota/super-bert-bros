@@ -17,6 +17,8 @@ walking_sprites_left: sprites de caminar hacia la izquierda
 icon: icono que se muestra en la parte inferior de la pantalla
 """
 
+from misc.translator import translate
+
 import pygame
 
 pygame.init()
@@ -29,7 +31,7 @@ pygame.font.init()
 
 BERT = {
     "name": "Bert",
-    "description": "humano promedio.",
+    "description": translate("bert.description"),
     "health": 100,
     "damage": 5,
     "projectile_damage": 3,
@@ -85,7 +87,7 @@ BERT["damage_sprite_left"] = [(pygame.transform.flip(BERT["damage_sprite_right"]
 
 BERROTA = {
     "name": "Berrota",
-    "description": "chaval flaco que se mueve rápido",
+    "description": translate("berrota.description"),
     "health": 90,
     "damage": 5,
     "projectile_damage": 3,
@@ -141,7 +143,7 @@ BERROTA["damage_sprite_left"] = [(pygame.transform.flip(BERROTA["damage_sprite_r
 
 LORC = {
     "name": "Lorc",
-    "description": "Tipo tanque, su único punto débil es la gravedad.",
+    "description": translate("lorc.description"),
     "health": 200,
     "damage": 5,
     "projectile_damage": 3,
@@ -197,7 +199,7 @@ LORC["damage_sprite_left"] = [(pygame.transform.flip(LORC["damage_sprite_right"]
 
 JORDI = {
     "name": "Jordi",
-    "description": "Es gay. Poca vida pero daño alto. Es gay.",
+    "description": translate("jordi.description"),
     "health": 80,
     "damage": 10,
     "projectile_damage": 5,
@@ -252,7 +254,7 @@ JORDI["damage_sprite_left"] = [(pygame.transform.flip(JORDI["damage_sprite_right
 
 BARCOS = {
     "name": "Barcos",
-    "description": "Habilidad especial: morderte los tobillos.",
+    "description": translate("barcos.description"),
     "health": 80,
     "damage": 9,
     "projectile_damage": 6,
@@ -307,7 +309,7 @@ BARCOS["damage_sprite_left"] = [(pygame.transform.flip(BARCOS["damage_sprite_rig
 
 ALSEXITO = {
     "name": "Alsexito",
-    "description": "En cuanto menos de lo esperas ya te está dando por detrás",
+    "description": translate("alsexito.description"),
     "health": 170,
     "damage": 30,
     "projectile_damage": 1,

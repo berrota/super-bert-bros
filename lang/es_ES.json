@@ -1,0 +1,48 @@
+{   
+    "title": "super bert bros real no fake 1000% real gta 6",
+
+    "random.description": "Selecciona un personaje al azar",
+    "bert.description": "humano promedio.",
+    "berrota.description": "chaval flaco que se mueve rápido",
+    "lorc.description": "Tipo tanque, su único punto débil es la gravedad.",
+    "jordi.description": "Es gay. Poca vida pero daño alto. Es gay.",
+    "barcos.description": "Habilidad especial: morderte los tobillos.",
+    "alsexito.description": "En cuanto menos de lo esperas ya te está dando por detrás",
+
+    "player1.name": "Jugador 1",
+    "player2.name": "Jugador 2",
+    "random.name": "Al azar",
+
+    "tie.title": "Pringaos",
+    "tie.text": "AMBOS CHABALES AN MORIDO",
+
+    "first": "1º",
+    "second": "2º",
+    "using": "usando el personaje",
+
+    "ok.ok": "OK",
+    "ok.text": "Haz click en OK para cerrar el juego.",
+
+    "dead": "MUERTO",
+
+    "crash_report": "REPORTE DE ERRORES",
+    "at": "a las",
+    "error.title": "ERROR TREMENDO SEÑORES",
+    "error.text": "Ha ocurrido un error! me cago en la puta. Se ha creado un archivo con más detalles: ",
+
+    "choose.title": "Selección de personajes",
+    "choose.color": "Selecciona un color para ",
+    "choose.player1": "Personaje de Jugador 1:",
+    "choose.player2": "Personaje de Jugador 2:",
+    "choose.begin": "Iniciar partida",
+
+    "pause.title": "Juego pausado",
+    "pause.back": "Volver",
+    "pause.quit": "Cerrar",
+    "pause.change_character": "Cambiar personajes",
+    "pause.adjust_volume": "Ajustar volumen",
+
+    "volume.title": "Ajustar volumen",
+    "volume.sfx": "Volumen de SFX:",
+    "volume.music": "Volumen de música:"
+}
