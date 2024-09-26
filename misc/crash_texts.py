@@ -73,7 +73,7 @@ def create_crash_report() -> None:
     #Nombre del archivo
     file_name = (
         f"{crash_dir}/crash-{now.year}-{now.month}-{now.day}_"
-        f"{now.strftime("%H:%M:%S")}.txt"
+        f"{now.strftime("%H-%M-%S")}.txt"
     )
     
     #Escribir el texto en el archivo

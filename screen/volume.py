@@ -1,5 +1,3 @@
-from misc.characters import *
-
 from misc.translator import translate
 
 import tkinter as tk
@@ -10,14 +8,27 @@ def change_volume(volume:float, music_volume:float) -> tuple[float, float]:
     """Abrir una ventana de tkinter para dejar que el jugador ajuste el volumen."""
 
     def set_volume(volume:float) -> None:
+        """Cambia el volumen de efectos sonoros."""
         global final_volume
         final_volume = round(float(volume), 1)
         volume_text.config(text=f"{translate("volume.sfx")} {final_volume}")
     
     def set_music_volume(volume:float) -> None:
+        """Cambia el volumen de la música."""
         global final_music_volume
         final_music_volume = round(float(volume), 1)
         music_volume_text.config(text=f"{translate("volume.music")} {final_music_volume}")
+    
+    def save_settings() -> None:
+        """Guardar preferencias de volumen a volume_prefs.py."""
+        with open('preferences/volume_prefs.py', 'w') as f:
+            f.write(f"SFX = {final_volume}\n")
+            f.write(f"MUSIC = {final_music_volume}\n")
+    
+    def save_and_quit() -> None:
+        """Guarda las preferencias de volumen y cierra la ventana."""
+        save_settings()
+        root.destroy()
 
 
     #Crear la ventana
@@ -27,6 +38,7 @@ def change_volume(volume:float, music_volume:float) -> tuple[float, float]:
     root.iconbitmap("assets/images/pengiun.ico")
     root.geometry(f"530x200+700+300")
     root.resizable(False, False)
+    root.focus()
 
     #Texto que muestra el nivel de volumen actual para los SFX (efectos de sonido)
     volume_text = tk.Label(root, text=f"{translate("volume.sfx")} 1")
@@ -47,7 +59,7 @@ def change_volume(volume:float, music_volume:float) -> tuple[float, float]:
     music_volume_slider.set(music_volume)
 
     #Botón para continuar con la partida
-    ok_button = ttk.Button(root, text=translate("ok.ok"), command=root.destroy)
+    ok_button = ttk.Button(root, text=translate("ok.ok"), command=save_and_quit)
     ok_button.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
 
     root.mainloop()

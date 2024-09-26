@@ -3,6 +3,7 @@ import random
 import pygetwindow
 import sys
 import time
+
 from tkinter import messagebox
 from typing import NoReturn
 
@@ -10,14 +11,18 @@ from objects.platform import Platform
 from objects.player import Player
 
 from screen.character_selection import character_selection_screen
+from screen.settings import settings_screen
 from screen.pause import draw_pause_screen
 from screen.volume import change_volume
 
 from misc.characters import *
 from misc.colors import *
 from misc.files import *
-from misc.key_bindings import *
-from misc import options
+
+from preferences.key_bindings import *
+
+from preferences import options as settings
+from preferences import volume_prefs
 
 from misc.translator import translate
 
@@ -50,13 +55,9 @@ def main() -> NoReturn:
     pygame.display.set_caption(translate("title"))
     pygame.display.set_icon(pygame.image.load("assets/images/icon.png"))
 
-    #Superficie
+    #Superficie para poder utilizar transparencia
     surface: pygame.Surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
-
-    #Volumen inicial
-    volume: float = 1
-    music_volume: float = 1
-
+    
     #Dejar que el jugador seleccione los personajes deseados
     characters: tuple = character_selection_screen( #Formato: nombre por defecto, personaje por defecto, color por defecto
         translate("player1.name"), "random", "#FF0000", 
@@ -78,9 +79,23 @@ def main() -> NoReturn:
         Platform(1080, 250, 200, 30, "small")
     )
     
+    #Ajustar volumen desde preferencias guardadas
+    volume: float = volume_prefs.SFX
+    music_volume: float = volume_prefs.MUSIC
+    
+    def change_volumes(sfx:float, music:float) -> None:
+        """Ajusta el volumen de los efectos sonoros y de la música."""
+        death_sound.set_volume(death_sound.get_volume() * sfx)
+        projectile_sound.set_volume(projectile_sound.get_volume() * sfx)
+        void_death_sound.set_volume(void_death_sound.get_volume() * sfx)
+        damage_sound.set_volume(damage_sound.get_volume() * sfx)
+        game_end_sound.set_volume(game_end_sound.get_volume() * sfx)
+        
+        pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() * music)
+    
+    change_volumes(volume, music_volume)
+    
     #Reproducir música
-    pygame.mixer.music.load("assets/sound/music.mp3")
-    pygame.mixer.music.set_volume(0.07)
     pygame.mixer.music.play(-1) #hacer que la música entre en bucle, especificándole -1 ciclos
 
     #Bucle del juego (lo que pasa cada tick)
@@ -94,7 +109,7 @@ def main() -> NoReturn:
         #Si el juego está pausado, dibujar el menú de pausa y pausar la música
         if pause:
             pygame.mixer.music.pause()
-            resume, quit, change_characters, change_volume_button = draw_pause_screen(surface, SCREEN_WIDTH, SCREEN_HEIGHT)
+            resume, quit, change_characters, change_volume_button, options = draw_pause_screen(surface, SCREEN_WIDTH, SCREEN_HEIGHT)
 
         #Manejo de eventos
         for event in pygame.event.get():
@@ -110,11 +125,11 @@ def main() -> NoReturn:
                 elif event.key == K_fullscreen: #pantalla completa
                     fullscreen = not fullscreen
                     if fullscreen:
-                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN, vsync=options.VSYNC)
+                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN, vsync=settings.VSYNC)
                         window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
                         window.moveTo(0, 0)
                     else:
-                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), vsync=options.VSYNC)
+                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), vsync=settings.VSYNC)
                         window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
                         window.moveTo(100, 100)
                     
@@ -179,14 +194,22 @@ def main() -> NoReturn:
                     volumes = change_volume(volume, music_volume)
                     current_volume = volumes[0]
                     current_music_volume = volumes[1]
-                    death_sound.set_volume(death_sound.get_volume() * current_volume)
-                    projectile_sound.set_volume(projectile_sound.get_volume() * current_volume)
-                    void_death_sound.set_volume(void_death_sound.get_volume() * current_volume)
-                    damage_sound.set_volume(damage_sound.get_volume() * current_volume)
-                    game_end_sound.set_volume(game_end_sound.get_volume() * current_volume)
-                    pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() * current_music_volume)
+                    change_volumes(current_volume, current_music_volume)
                     volume = current_volume
                     music_volume = current_music_volume
+                
+                #Ajustes / configuración
+                if options.collidepoint(event.pos):
+                    settings.VSYNC, fullscreen, settings.LANG = settings_screen(settings.VSYNC, fullscreen, settings.LANG)
+                    
+                    if fullscreen:
+                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN, vsync=settings.VSYNC)
+                        window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
+                        window.moveTo(0, 0)
+                    else:
+                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), vsync=settings.VSYNC)
+                        window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
+                        window.moveTo(100, 100)
         
         #Si el juego NO está pausado, actualizar como de costumbre
         if not pause:
@@ -419,8 +442,6 @@ def main() -> NoReturn:
         if pause:
             screen.blit(surface, (0, 0))
         
-        screen.blit(small_font.render(str(player1.double_jump_used), True, WHITE), (0, 0))
-            
         #Actualizar juego
         pygame.display.update()
         clock.tick(FPS) #de momento voy a mantener los FPS fijados a 60 para no romper nada más

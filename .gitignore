@@ -1,9 +1,8 @@
-__pycache__
 crash_logs/*.txt
-screen/__pycache__
-misc/__pycache__
-objects/__pycache__
 dist
 build
 *.spec
 build.bat
+**/__pycache__/
+preferences/options.py
+preferences/volume_prefs.py

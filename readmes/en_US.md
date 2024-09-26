@@ -62,6 +62,6 @@ then just run this in your terminal of choice
 1. `git clone https://github.com/berrota/super-bert-bros`
 2. `cd super-bert-bros`
 3. `pip install -r requirements.txt`
-4. `python main.py` o `python3 main.py` (o `pythonw main.py`)
+4. `python main.py` or `python3 main.py` (or `pythonw main.py`)
 
 ## if you want more info, check the [changelog](VERSION.md) file. note that it's in spanish, though. i do not plan on translating this.

@@ -6,10 +6,14 @@ from screen.tooltips import ToolTip
 from misc.translator import translate
 
 import random
+import re
+import sys
+from typing import Literal
+
 import tkinter as tk
 from tkinter import colorchooser
+from tkinter import messagebox as msgbox
 from tkinter import ttk
-from typing import Literal
 
 
 def character_selection_screen(
@@ -46,58 +50,111 @@ def character_selection_screen(
         ALSEXITO["name"]: characters[6]
     }
 
-    def on_character_select(player:Literal[1, 2], value) -> None:
-        #Manejar la selección de personajes
+    def on_character_select(player:Literal[1, 2], value:str) -> None:
+        """Maneja la selección de personajes de los dropdowns o combo boxes."""
+         #Jugador 1
         if player == 1:
             player1_character.set(value)
             ToolTip(player1_dropdown, get_description_by_name(value))
-            
+        
+        #Jugador 2
         elif player == 2:
             player2_character.set(value)
             ToolTip(player2_dropdown, get_description_by_name(value))
-            
+    
+    def is_valid_name(name:str) -> bool:
+        """Valida los nombres de los jugadores."""
+        
+        #Asegurarse de que el nombre final no sea un espacio en blanco
+        if not name.strip():
+            return False
+
+        #Definir un patrón regex para permitir sólamente carácteres alfanuméricos y algunos especiales
+        pattern = re.compile(r'^[a-zA-Z0-9_]+$')
+        return bool(pattern.match(name))
+
+    def compare_player_names(player1_name:str, player2_name:str) -> bool:
+        """Compara los nombres de los jugadores para ver si son válidos y diferentes el uno del otro."""
+        
+        #Eliminar espacios de los extremos
+        player1_name = player1_name.strip()
+        player2_name = player2_name.strip()
+        
+        #Asegurarse de que los nombres son válidos
+        if not (is_valid_name(player1_name) and is_valid_name(player2_name)):
+            title = translate("choose.error.valid.title").format(attr=translate("names"))
+            message = translate("choose.error.valid.text").format(attr=translate("names"))
+            msgbox.showwarning(title, message)
+            return False
+        
+        #Asegurarse de que los nombres son diferentes
+        if player1_name.lower() == player2_name.lower():
+            title = translate("choose.error.update.title").format(attr=translate("names"))
+            message = translate("choose.error.update.text").format(attr=translate("names"))
+            msgbox.showwarning(title, message)
+            return False
+        
+        #Si los nombres pasan todos los tests, devolver True o verdadero para asimilar que son válidos
+        return True
 
     def get_names() -> None:
-        #Almacenar los nombres y cerrar la ventana
+        """Almacena los nombres, los compara junto a los colores y cierra la ventana."""
         global player1_name
         global player2_name
+        global player1_color
+        global player2_color
         
         #limitar carácteres a 16
         player1_name = player1_name_entry.get()[0:16]
         player2_name = player2_name_entry.get()[0:16]
         
+        #comparar nombres de jugadores
+        if not compare_player_names(player1_name, player2_name):
+            return
+        
+        #comparar colores
+        if player1_color.lower() == player2_color.lower():
+            title = translate("choose.error.update.title").format(attr = translate("colors"))
+            message = translate("choose.error.update.text").format(attr = translate("colors"))
+            msgbox.showwarning(title, message)
+            return
+        
+        #cerrar ventana
         root.destroy()
     
     
     def change_player1_color() -> None:
-        #Asignar el color elegido al jugador 1 y cambiar el color del botón
+        """Asigna el color elegido al jugador 1 y cambia el color del botón a este."""
         global player1_color
         
+        #preguntar por un color
         color = colorchooser.askcolor(title=translate("choose.color") + player1_name)
         
+        #si el color es válido, asignárselo
         if color[1]:
             player1_color = color[1]
-        else:
-            player1_color = player1_color_old
         
+        #cambiar el color del botón
         player1_color_button.config(bg=player1_color)
         
         
     def change_player2_color() -> None:
-        #Asignar el color elegido al jugador 2 y cambiar el color del botón
+        """Asigna el color elegido al jugador 2 y cambia el color del botón a este."""
         global player2_color
         
+        #pregunar por un color
         color = colorchooser.askcolor(title=translate("choose.color") + player2_name)
         
-        if color[1]:
+        #si el color es válido, asignárselo
+        if color[1] and color[1] != player1_color and color[1] != player1_color_old:
             player2_color = color[1]
-        else:
-            player2_color = player2_color_old
-            
+        
+        #cambiar el color del botón 
         player2_color_button.config(bg=player2_color)
     
     
     def get_description_by_name(character_name: str) -> dict:
+        """Devuelve la descripción del personaje cuyo nombre se pasa como argumento."""
         match character_name:
             case "random":
                 return translate("random.description")
@@ -124,6 +181,7 @@ def character_selection_screen(
     root.iconbitmap("assets/images/pengiun.ico")
     root.geometry(f"570x100+720+300")
     root.resizable(False, False)
+    root.protocol("WM_DELETE_WINDOW", sys.exit) #cerrar juego al cerrar ventana para evitar que jugadores se salten la verificación de nombres y colores
     
     #Crear StringVars para almacenar los jugadores seleccionados más tarde
     player1_character = tk.StringVar()
@@ -169,7 +227,7 @@ def character_selection_screen(
 
     root.mainloop()
 
-    #Pasar de StringVars al personaje de verdad (aquí no he usado una declaración match-case porque no se permiten usar índices de listas en estas)
+    #Pasar de StringVars al personaje de verdad
     if player1_character.get() == characters[1]:
         player1_character = BERT
     elif player1_character.get() == characters[2]:

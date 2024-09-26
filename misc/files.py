@@ -30,6 +30,8 @@ small_font = pygame.font.Font(None, 35)
 
 ####################################### EFECTOS DE SONIDO Y MÚSICA #######################################
 
+pygame.mixer.music.load("assets/sound/music.mp3")
+
 jump_sound = pygame.mixer.Sound("assets/sound/jump.wav")
 jump_sound2 = pygame.mixer.Sound("assets/sound/jump2.wav")
 death_sound = pygame.mixer.Sound("assets/sound/death.wav")
@@ -38,7 +40,10 @@ void_death_sound = pygame.mixer.Sound("assets/sound/void_death.wav")
 damage_sound = pygame.mixer.Sound("assets/sound/damage.wav")
 game_end_sound = pygame.mixer.Sound("assets/sound/game_end.wav")
 
-#Ajuste de volumen para los sonidos
+#Ajuste de volumen para no romperte los tímpanos
+
+pygame.mixer.music.set_volume(0.07)
+
 jump_sound.set_volume(0.5)
 jump_sound2.set_volume(0.2)
 death_sound.set_volume(0.9)

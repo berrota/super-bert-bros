@@ -9,8 +9,8 @@
     "barcos.description": "Habilidad especial: morderte los tobillos.",
     "alsexito.description": "En cuanto menos de lo esperas ya te está dando por detrás",
 
-    "player1.name": "Jugador 1",
-    "player2.name": "Jugador 2",
+    "player1.name": "Jugador1",
+    "player2.name": "Jugador2",
     "random.name": "Al azar",
 
     "tie.title": "Pringaos",
@@ -36,13 +36,33 @@
     "choose.player2": "Personaje de Jugador 2:",
     "choose.begin": "Iniciar partida",
 
+    "choose.error.update.title": "No se pudieron actualizar los {attr}",
+    "choose.error.update.text": "Asegúrate de que ambos jugadores tengan {attr} distintos.",
+    "choose.error.valid.title": "{attr} inválidos",
+    "choose.error.valid.text": "Asegúrate de que todos los {attr} son válidos.",
+
+    "colors": "colores",
+    "names": "nombres",
+
     "pause.title": "Juego pausado",
     "pause.back": "Volver",
     "pause.quit": "Cerrar",
+    "pause.options": "Configuración",
     "pause.change_character": "Cambiar personajes",
     "pause.adjust_volume": "Ajustar volumen",
 
     "volume.title": "Ajustar volumen",
     "volume.sfx": "Volumen de SFX:",
-    "volume.music": "Volumen de música:"
+    "volume.music": "Volumen de música:",
+
+    "options.title": "Configuración",
+    "options.vsync": "VSync",
+    "options.fullscreen": "Pantalla completa",
+    "options.lang": "Idioma",
+    "options.vsync.description": "Hace que los FPS sean exactamente lo máximo que soporte tu monitor",
+    "options.fullscreen.description": "Pantalla pero completa",
+    "options.lang.description": "Idioma principal del juego. Reiniciar juego para aplicar",
+
+    "on": "SÍ",
+    "off": "NO"
 }

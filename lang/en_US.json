@@ -9,8 +9,8 @@
     "barcos.description": "A fucking dwarf that will bite your ankles",
     "alsexito.description": "When you least expect it he'll surprise you with a buttfuck",
 
-    "player1.name": "Player 1",
-    "player2.name": "Player 2",
+    "player1.name": "Player1",
+    "player2.name": "Player2",
     "random.name": "Random",
 
     "tie.title": "Suckers",
@@ -36,13 +36,33 @@
     "choose.player2": "Player 2 character:",
     "choose.begin": "Start game",
 
+    "choose.error.update.title": "Could not update the {attr}",
+    "choose.error.update.text": "Please make sure both players have different {attr}.",
+    "choose.error.valid.title": "Invalid {attr}",
+    "choose.error.valid.text": "Please make sure all {attr} are valid.",
+
+    "colors": "colors",
+    "names": "names",
+
     "pause.title": "Game paused",
     "pause.back": "Back",
     "pause.quit": "Quit",
+    "pause.options": "Options",
     "pause.change_character": "Change characters",
     "pause.adjust_volume": "Adjust volume",
 
     "volume.title": "Adjust volume",
     "volume.sfx": "SFX volume",
-    "volume.music": "Music volume"
+    "volume.music": "Music volume",
+
+    "options.title": "Options",
+    "options.vsync": "VSync",
+    "options.fullscreen": "Fullscreen",
+    "options.lang": "Language",
+    "options.vsync.description": "Makes the FPS exactly the maximum refresh rate of your monitor",
+    "options.fullscreen.description": "Screen but full",
+    "options.lang.description": "Main language for the game. Restart game to apply.",
+
+    "on": "ON",
+    "off": "OFF"
 }

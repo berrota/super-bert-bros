@@ -141,7 +141,7 @@ class Player(pygame.sprite.Sprite):
         
         if self.damage_frame_timer > 0:
             self.status = "damaged"
-            self.damage_frame_timer -= dt / 0.016 ############################################################
+            self.damage_frame_timer -= dt / 0.016 
         else:
             if self.status == "damaged":
                 self.status = "idle"
@@ -164,7 +164,7 @@ class Player(pygame.sprite.Sprite):
                         self.current_sprite = 0
                 
                     self.image = self.current_sprites[int(self.current_sprite)]
-
+                
                 case "jumping": #saltando
                     self.current_sprites = self.jumping_sprites_left
                     self.current_sprite += 0.15 / 0.016 * dt
