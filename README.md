@@ -33,16 +33,18 @@ pedazo de juego
 
 > f11 para pantalla completa
 
-para cambiar los controles, ve al archivo [key_bindings.py](misc/key_bindings.py) y cámbialos ahí.
+para cambiar los controles, ve al archivo [key_bindings.py](preferences/key_bindings.py) y cámbialos ahí.
 
 
-## significado de los colores de las hitboxes:
+## créditos
 
-> rojo --> jugador
+gracias a IVZA por su animación de ataques cuerpo a cuerpo (y especiales que ya añadiré en un futuro). él hizo la de bert y yo básicamente copié el estilo a los demás personajes
 
-> azul --> plataforma
+su canal de youtube: https://www.youtube.com/@IVZA-d6h
 
-> verde --> proyectil
+su nombre de usuario de discord: ehhjtytjg
+
+muchas gracias por la animación ivza no tengo una puta mierda de conocimientos en dibujo o animaciones o sea que me vienes de puta madre
 
 
 ## como ejecutarlo

@@ -1,10 +1,12 @@
-from misc.translator import translate
+from util.translator import translate
+
+import json
 
 import tkinter as tk
 from tkinter import ttk
 
 
-def change_volume(volume:float, music_volume:float) -> tuple[float, float]:
+def change_volume_screen(volume:float, music_volume:float) -> tuple[float, float]:
     """Abrir una ventana de tkinter para dejar que el jugador ajuste el volumen."""
 
     def set_volume(volume:float) -> None:
@@ -21,9 +23,13 @@ def change_volume(volume:float, music_volume:float) -> tuple[float, float]:
     
     def save_settings() -> None:
         """Guardar preferencias de volumen a volume_prefs.py."""
-        with open('preferences/volume_prefs.py', 'w') as f:
-            f.write(f"SFX = {final_volume}\n")
-            f.write(f"MUSIC = {final_music_volume}\n")
+        volume = {
+            "sfx": final_volume,
+            "music": final_music_volume
+        }
+        
+        with open('preferences/volume.json', 'w') as volume_file:
+            json.dump(volume, volume_file, indent=4)
     
     def save_and_quit() -> None:
         """Guarda las preferencias de volumen y cierra la ventana."""

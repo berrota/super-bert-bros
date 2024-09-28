@@ -61,8 +61,10 @@
     "options.lang": "Idioma",
     "options.vsync.description": "Hace que los FPS sean exactamente lo máximo que soporte tu monitor",
     "options.fullscreen.description": "Pantalla pero completa",
-    "options.lang.description": "Idioma principal del juego. Reiniciar juego para aplicar",
+    "options.lang.description": "Idioma principal del juego",
 
     "on": "SÍ",
-    "off": "NO"
+    "off": "NO",
+
+    "translation_error": "Error de traducción"
 }

@@ -2,7 +2,8 @@ import pygame
 
 from misc.colors import *
 from misc.files import font, title_font
-from misc.translator import translate
+
+from util.translator import translate
 
 def draw_pause_screen(surface, screen_width, screen_height) -> tuple[pygame.Rect, pygame.Rect, pygame.Rect, pygame.Rect, pygame.Rect]:
     """Dibujar el menú de pausa y sus botones."""
@@ -12,11 +13,11 @@ def draw_pause_screen(surface, screen_width, screen_height) -> tuple[pygame.Rect
     title_rect = pygame.draw.rect(surface, BLACK, (200, 50, 1500, 150), 0, 10)
     
     #Botones
-    resume_rect = pygame.draw.rect(surface, WHITE, (300, 350, 600, 150), 0, 10)
-    quit_rect = pygame.draw.rect(surface, WHITE, (1000, 350, 600, 150), 0, 10)
+    options_rect = pygame.draw.rect(surface, WHITE, (300, 850, 600, 150), 0, 10)
+    quit_rect = pygame.draw.rect(surface, WHITE, (1000, 850, 600, 150), 0, 10)
     change_characters_rect = pygame.draw.rect(surface, WHITE, (300, 600, 600, 150), 0, 10)
     change_volume_rect = pygame.draw.rect(surface, WHITE, (1000, 600, 600, 150), 0, 10)
-    options_rect = pygame.draw.rect(surface, WHITE, (350, 850, 1200, 150), 0, 10)
+    resume_rect = pygame.draw.rect(surface, WHITE, (350, 350, 1200, 150), 0, 10)
 
     #Texto
     title_text = title_font.render(translate("pause.title"), True, WHITE)

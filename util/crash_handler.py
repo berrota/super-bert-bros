@@ -3,7 +3,7 @@ import os
 import random
 import traceback
 
-from misc.translator import translate
+from util.translator import translate
 
 from tkinter import messagebox as msgbox
 

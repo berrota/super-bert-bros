@@ -61,8 +61,10 @@
     "options.lang": "Language",
     "options.vsync.description": "Makes the FPS exactly the maximum refresh rate of your monitor",
     "options.fullscreen.description": "Screen but full",
-    "options.lang.description": "Main language for the game. Restart game to apply.",
+    "options.lang.description": "Main language for the game",
 
     "on": "ON",
-    "off": "OFF"
+    "off": "OFF",
+
+    "translation_error": "Translation Error"
 }

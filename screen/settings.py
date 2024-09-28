@@ -1,10 +1,11 @@
+import json
+
 import tkinter as tk
 from tkinter import ttk
 
-from preferences.options import *
-
-from misc.translator import translate
 from misc.files import width, height
+
+from util.translator import translate
 
 from screen.tooltips import ToolTip
 
@@ -13,16 +14,20 @@ LANGS = (
     "es_ES"
 )
     
-def settings_screen(vsync_old:bool, fullscreen_old:bool, language_old:str) -> tuple[bool, bool, str]:
+def settings_screen() -> tuple[bool, bool, str]:
     """Abre una ventana de tkinter para permitir al jugador personalizar opciones varias."""
-    
     
     ##################################### FUNCIONES Y VARIABLES #####################################
     
+    #Cargar preferencias desde el archivo json
     global vsync, fullscreen, language
-    vsync = vsync_old
-    fullscreen = fullscreen_old
-    language = language_old
+    
+    with open("preferences/options.json", "r", encoding="utf-8") as options_file:
+        preferences = json.load(options_file)
+    
+    vsync = preferences["vsync"]
+    fullscreen = preferences["fullscreen"]
+    language = preferences["lang"]
     
     # Diccionarios con los nombres y códigos de cada idioma
     language_names = {
@@ -50,11 +55,14 @@ def settings_screen(vsync_old:bool, fullscreen_old:bool, language_old:str) -> tu
         language = language_codes[lang]
     
     def save_settings() -> None:
-        """Guardar preferencias a options.py."""
-        with open('preferences/options.py', 'w') as f:
-            f.write(f"VSYNC = {vsync}\n")
-            f.write(f"FULLSCREEN = {fullscreen}\n")
-            f.write(f'LANG = "{language}"\n')
+        preferences = {
+            "vsync": vsync,
+            "fullscreen": fullscreen,
+            "lang": language
+        }
+        
+        with open("preferences/options.json", "w", encoding="utf-8") as options_file:
+            json.dump(preferences, options_file, indent=4)
             
     def save_and_quit() -> None:
         """Guardar preferencias y cerrar la ventana."""
@@ -90,8 +98,8 @@ def settings_screen(vsync_old:bool, fullscreen_old:bool, language_old:str) -> tu
     #Dropdown para el idioma
     language_dropdown = ttk.Combobox(root, values=tuple(language_names.values()), state="readonly")
     language_dropdown.bind("<<ComboboxSelected>>", lambda event: on_update_language(language_dropdown.get()))
-    language_dropdown.set(language_names[LANG])
-    on_update_language(language_names[LANG])
+    language_dropdown.set(language_names[language])
+    on_update_language(language_names[language])
     language_dropdown.place(relx=0.5, rely=0.6, anchor="center")
     ToolTip(language_dropdown, translate("options.lang.description"))
     

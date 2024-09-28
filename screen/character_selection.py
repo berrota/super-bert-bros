@@ -3,7 +3,7 @@ from misc.colors import *
 
 from screen.tooltips import ToolTip
 
-from misc.translator import translate
+from util.translator import translate
 
 import random
 import re
@@ -52,6 +52,9 @@ def character_selection_screen(
 
     def on_character_select(player:Literal[1, 2], value:str) -> None:
         """Maneja la selección de personajes de los dropdowns o combo boxes."""
+        if value == translate("random.name"):
+            value = "random"
+        
          #Jugador 1
         if player == 1:
             player1_character.set(value)

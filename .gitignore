@@ -4,5 +4,5 @@ build
 *.spec
 build.bat
 **/__pycache__/
-preferences/options.py
-preferences/volume_prefs.py
+preferences/options.json
+preferences/volume.json

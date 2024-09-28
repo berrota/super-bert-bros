@@ -33,7 +33,7 @@ crappiest game ever witnessed by humanity
 
 > f11 to toggle fullscreen
 
-to change key bindings, go to the [key_bindings.py](misc/key_bindings.py) files and change them there
+to change key bindings, go to the [key_bindings.py](preferences/key_bindings.py) files and change them there
 
 
 ## hitbox colors meaning:
@@ -42,7 +42,17 @@ to change key bindings, go to the [key_bindings.py](misc/key_bindings.py) files 
 
 > blue --> platforms
 
-> green --> projectiles
+> green --> damage source
+
+## credits
+
+shout out to IVZA for making the melee attack animation for me, he made the one for bert then i copied the animation for all characters
+
+his yt channel (spanish): https://www.youtube.com/@IVZA-d6h
+
+his discord username: ehhjtytjg
+
+thanks a lot IVZA you're the GOAT
 
 
 ## how 2 run

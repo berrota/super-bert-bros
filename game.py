@@ -1,3 +1,4 @@
+import json
 import pygame
 import random
 import pygetwindow
@@ -13,7 +14,7 @@ from objects.player import Player
 from screen.character_selection import character_selection_screen
 from screen.settings import settings_screen
 from screen.pause import draw_pause_screen
-from screen.volume import change_volume
+from screen.volume import change_volume_screen
 
 from misc.characters import *
 from misc.colors import *
@@ -21,14 +22,23 @@ from misc.files import *
 
 from preferences.key_bindings import *
 
-from preferences import options as settings
-from preferences import volume_prefs
-
-from misc.translator import translate
+from util.translator import translate
 
 def main() -> NoReturn:
     """Función que contiene el \"core\" del juego."""
     
+    #Importar ajustes
+    with open("preferences/options.json", "r") as options_file:
+        preferences = json.load(options_file)
+    
+    VSYNC = preferences["vsync"]
+    LANG = preferences["lang"]
+    
+    with open("preferences/volume.json", "r") as volume_file:
+        volume_preferences = json.load(volume_file)
+    
+    SFX = volume_preferences["sfx"]
+    MUSIC = volume_preferences["music"]
     
     #Inicializar cosas generales
     pygame.init()
@@ -38,7 +48,7 @@ def main() -> NoReturn:
     prev_time: float = time.time()
     deltaTime: float = 0
     
-    hitbox: bool = False
+    debug: bool = False
     pause: bool = False
 
     #Proyectiles
@@ -80,20 +90,21 @@ def main() -> NoReturn:
     )
     
     #Ajustar volumen desde preferencias guardadas
-    volume: float = volume_prefs.SFX
-    music_volume: float = volume_prefs.MUSIC
+    sfx_volume = SFX
+    music_volume = MUSIC
     
-    def change_volumes(sfx:float, music:float) -> None:
+    def change_volumes(sfx: float = 1, music: float = 1) -> None:
         """Ajusta el volumen de los efectos sonoros y de la música."""
-        death_sound.set_volume(death_sound.get_volume() * sfx)
-        projectile_sound.set_volume(projectile_sound.get_volume() * sfx)
-        void_death_sound.set_volume(void_death_sound.get_volume() * sfx)
-        damage_sound.set_volume(damage_sound.get_volume() * sfx)
-        game_end_sound.set_volume(game_end_sound.get_volume() * sfx)
+        pygame.mixer.music.set_volume(0.07 * music)
         
-        pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() * music)
+        death_sound.set_volume(0.9 * sfx)
+        attack_sound.set_volume(0.7 * sfx)
+        projectile_sound.set_volume(0.2 * sfx)
+        void_death_sound.set_volume(0.07 * sfx)
+        damage_sound.set_volume(0.8 * sfx)
+        game_end_sound.set_volume(0.1 * sfx)
     
-    change_volumes(volume, music_volume)
+    change_volumes(SFX, MUSIC)
     
     #Reproducir música
     pygame.mixer.music.play(-1) #hacer que la música entre en bucle, especificándole -1 ciclos
@@ -103,7 +114,7 @@ def main() -> NoReturn:
         
         #Delta time (actualizar de manera constante independientemente de los FPS)
         now = time.time()
-        deltaTime = now - prev_time
+        deltaTime = (now - prev_time)
         prev_time = now
 
         #Si el juego está pausado, dibujar el menú de pausa y pausar la música
@@ -121,20 +132,28 @@ def main() -> NoReturn:
             elif event.type == pygame.KEYDOWN: #pulsación de teclas
                 if event.key == K_pause: #pausa
                     pause = not pause
-                
+                    if not pause:
+                        pygame.mixer.unpause() #no funciona pero bueno
+                                    
                 elif event.key == K_fullscreen: #pantalla completa
                     fullscreen = not fullscreen
                     if fullscreen:
-                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN, vsync=settings.VSYNC)
-                        window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
-                        window.moveTo(0, 0)
+                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN, vsync=VSYNC)
+                        try:
+                            window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
+                            window.moveTo(0, 0)
+                        except IndexError:
+                            pass
                     else:
-                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), vsync=settings.VSYNC)
-                        window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
-                        window.moveTo(100, 100)
+                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), vsync=VSYNC)
+                        try:
+                            window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
+                            window.moveTo(100, 100)
+                        except IndexError:
+                            pass
                     
-                elif event.key == K_hitbox: #dibujar hitboxes
-                    hitbox = not hitbox
+                elif event.key == K_debug: #dibujar información de debug
+                    debug = not debug
                     
                 elif event.key == K_player1_jump and not pause: #salto de jugador 1
                     player1.jump()
@@ -147,6 +166,12 @@ def main() -> NoReturn:
                     
                 elif event.key == K_player2_projectile and not pause: # proyectiles de jugador 2
                     player2.shoot()
+                
+                elif event.key == K_player1_attack and not pause: #ataques cuerpo a cuerpo de jugador 1
+                    player1.attack()
+                
+                elif event.key == K_player2_attack and not pause: #ataques cuerpo a cuerpo de jugador 2
+                    player2.attack()
                     
                 elif event.key == K_quit: #cerrar el juego por medio de la pulsación de la tecla de cerrado
                     pygame.quit()
@@ -191,25 +216,29 @@ def main() -> NoReturn:
                 
                 #Ajustar volumen
                 if change_volume_button.collidepoint(event.pos):
-                    volumes = change_volume(volume, music_volume)
-                    current_volume = volumes[0]
-                    current_music_volume = volumes[1]
-                    change_volumes(current_volume, current_music_volume)
-                    volume = current_volume
-                    music_volume = current_music_volume
+                    volumes = change_volume_screen(sfx_volume, music_volume)
+                    sfx_volume = volumes[0]
+                    music_volume = volumes[1]
+                    change_volumes(sfx_volume, music_volume)
                 
                 #Ajustes / configuración
                 if options.collidepoint(event.pos):
-                    settings.VSYNC, fullscreen, settings.LANG = settings_screen(settings.VSYNC, fullscreen, settings.LANG)
+                    VSYNC, fullscreen, LANG = settings_screen()
                     
                     if fullscreen:
-                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN, vsync=settings.VSYNC)
-                        window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
-                        window.moveTo(0, 0)
+                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN, vsync=VSYNC)
+                        try:
+                            window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
+                            window.moveTo(0, 0)
+                        except IndexError:
+                            pass
                     else:
-                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), vsync=settings.VSYNC)
-                        window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
-                        window.moveTo(100, 100)
+                        pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), vsync=VSYNC)
+                        try:
+                            window = pygetwindow.getWindowsWithTitle(translate("title"))[0]
+                            window.moveTo(100, 100)
+                        except IndexError:
+                            pass
         
         #Si el juego NO está pausado, actualizar como de costumbre
         if not pause:
@@ -237,10 +266,13 @@ def main() -> NoReturn:
             #Jugador 2
             if keys[K_player2_left] and keys[K_player2_right]:
                 player2.move(0)
+                
             elif keys[K_player2_left]:
                 player2.move(-1)
+                
             elif keys[K_player2_right]:
                 player2.move(1)
+                
             else:
                 player2.move(0)
 
@@ -249,9 +281,8 @@ def main() -> NoReturn:
 
                 #Hacer que haga daño
                 if projectile.rect.colliderect(player2.rect):
-                    player2.get_hit(projectile.direction)
+                    player2.get_hit(projectile.direction, player1.projectile_damage)
                     player1.projectiles.remove(projectile)
-                    player2.hp -= player1.projectile_damage
                 
                 #Colisión con la plataforma grande
                 if projectile.rect.colliderect(platforms[0]):
@@ -262,20 +293,23 @@ def main() -> NoReturn:
 
                 #Hacer que haga daño
                 if projectile.rect.colliderect(player1.rect):
-                    player1.get_hit(projectile.direction)
+                    player1.get_hit(projectile.direction, player2.projectile_damage)
                     player2.projectiles.remove(projectile)
-                    player1.hp -= player2.projectile_damage
                 
                 #Colisión con la plataforma grande
                 if projectile.rect.colliderect(platforms[0]):
                     player2.projectiles.remove(projectile)
             
-            if len(player1.projectiles) > MAX_PROJECTILES: #Máximos proyectiles
+            if len(player1.projectiles) > MAX_PROJECTILES: #Máximos proyectiles permitidos
                 player1.projectiles.pop(0)
 
-            if len(player2.projectiles) > MAX_PROJECTILES: #Máximos proyectiles
+            if len(player2.projectiles) > MAX_PROJECTILES: #Máximos proyectiles permitidos
                 player2.projectiles.pop(0)
-
+            
+            #Actualizar ataques cuerpo a cuerpo
+            for player in players:
+                player.update_attack(deltaTime, player2 if player == player1 else player1)
+            
             #Actualizar jugadores
             players.update(platforms, deltaTime) 
 
@@ -286,6 +320,7 @@ def main() -> NoReturn:
                     if player.lives > 0:
                             pygame.mixer.Sound.play(void_death_sound)
                             player.hp = player.character["health"]
+                            player.gain_invulnerability(5, respawn=True)
                             player.rect.x = random.choice([640, 1080])
                             player.rect.y = -2000
                             player.lives -= 1
@@ -297,6 +332,7 @@ def main() -> NoReturn:
                     if player.lives > 0:
                         pygame.mixer.Sound.play(death_sound)
                         player.hp = player.character["health"]
+                        player.gain_invulnerability(5, respawn=True)
                         player.rect.x = random.choice([640, 1080])
                         player.rect.y = -2000
                         player.lives -= 1
@@ -406,7 +442,8 @@ def main() -> NoReturn:
             platform.draw(screen)
         
         #Jugadores
-        players.draw(screen)
+        for player in players:
+            player.draw(screen)
         
         #Proyectiles
         for player in players:
@@ -424,8 +461,8 @@ def main() -> NoReturn:
             pygame.draw.rect(screen, WHITE, (player_name_x, player_name_y, player_name_width, player_name_height), 0, 8)
             screen.blit(player_nametag, (player_name_x + 10, player_name_y + 2))
 
-        #Hitboxes (si están activadas)
-        if hitbox:
+        #Hitboxes y otra información debug (si están activadas)
+        if debug:
             for platform in platforms:
                 platform.draw_hitboxes(screen)
 
@@ -437,10 +474,16 @@ def main() -> NoReturn:
 
             for projectile in player2.projectiles:
                 projectile.draw_hitboxes(screen)
+            
+            screen.blit(font.render(f"Player 1 status: {player1.status}", True, BLACK), (0, 0))
+            screen.blit(font.render(f"Player 2 status: {player2.status}", True, BLACK), (0, 30))
+            screen.blit(font.render(f"Player 1 inv.: {player1.invulnerable} for {int(player1.invulnerability_timer * 1000)} ms", True, BLACK), (0, 60))
+            screen.blit(font.render(f"Player 2 inv.: {player2.invulnerable} for {int(player2.invulnerability_timer * 1000)} ms", True, BLACK), (0, 90))
 
         #Superficie gris semi-transparente
         if pause:
             screen.blit(surface, (0, 0))
+            pygame.mixer.pause()
         
         #Actualizar juego
         pygame.display.update()
