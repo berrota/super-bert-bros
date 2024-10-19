@@ -48,7 +48,6 @@ BERT = {
     "weight": 1,
     
     #Sprites y animaciones
-    
     "walking_sprites_right": [
         (pygame.image.load("assets/images/characters/bert/walk/0.png")),
         (pygame.image.load("assets/images/characters/bert/walk/1.png")),
@@ -89,8 +88,7 @@ BERT = {
     "icon_dead": pygame.image.load("assets/images/characters/bert/icon_dead.png")
 }
 
-#Invertir sprites
-
+#Invertir sprites de derecha para obtener sprites de izquierda
 for sprite in BERT["walking_sprites_right"]:
     inverted_sprite = pygame.transform.flip(sprite, True, False)
     BERT["walking_sprites_left"].append(inverted_sprite)
@@ -127,7 +125,7 @@ BERROTA = {
     "jump_velocity": 13,
     "terminal_velocity": 17,
     "gravity": 0.5,
-    "weight": 1.5,
+    "weight": 0.5,
     
     "walking_sprites_right": [
         (pygame.image.load("assets/images/characters/berrota/walk/0.png")),
@@ -148,11 +146,11 @@ BERROTA = {
     "jumping_sprites_left": [],
         
     "attack_sprites_right": [
-        (pygame.image.load("assets/images/characters/bert/attack/0.png")),
-        (pygame.image.load("assets/images/characters/bert/attack/1.png")),
-        (pygame.image.load("assets/images/characters/bert/attack/2.png")),
-        (pygame.image.load("assets/images/characters/bert/attack/3.png")),
-        (pygame.image.load("assets/images/characters/bert/attack/4.png"))
+        (pygame.image.load("assets/images/characters/berrota/attack/0.png")),
+        (pygame.image.load("assets/images/characters/berrota/attack/1.png")),
+        (pygame.image.load("assets/images/characters/berrota/attack/2.png")),
+        (pygame.image.load("assets/images/characters/berrota/attack/3.png")),
+        (pygame.image.load("assets/images/characters/berrota/attack/4.png"))
     ],
     "attack_sprites_left": [],
     
@@ -205,7 +203,7 @@ LORC = {
     "jump_velocity": 7.5,
     "terminal_velocity": 25,
     "gravity": 0.72,
-    "weight": 0.5,
+    "weight": 2,
     
     "walking_sprites_right": [
         (pygame.image.load("assets/images/characters/lorc/walk/0.png")),
@@ -360,7 +358,7 @@ BARCOS = {
     "jump_velocity": 12,
     "terminal_velocity": 17,
     "gravity": 0.5,
-    "weight": 1,
+    "weight": 0.25,
     
     "walking_sprites_right": [
         (pygame.image.load("assets/images/characters/barcos/walk/0.png")),
@@ -437,7 +435,7 @@ ALSEXITO = {
     "jump_velocity": 8,
     "terminal_velocity": 30,
     "gravity": 0.7,
-    "weight": 2,
+    "weight": 1.7,
     
     "walking_sprites_right": [
         (pygame.image.load("assets/images/characters/alsexito/walk/0.png")),

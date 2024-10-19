@@ -6,3 +6,4 @@ build.bat
 **/__pycache__/
 preferences/options.json
 preferences/volume.json
+/.github

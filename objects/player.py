@@ -1,19 +1,23 @@
 import math
 import pygame
+import random
+import sys
 import time
 
 from typing import Literal
+from tkinter import messagebox
 
 from objects.projectile import Projectile
 
 from misc.characters import *
 from misc.files import *
 
+from preferences.key_bindings import *
+
 pygame.init()
 
 class Player(pygame.sprite.Sprite):
     """Objeto para el jugador y sus atributos. Aquí se maneja la mayoría de la lógica del movimiento y otras mecánicas del jugador."""
-    
     
     ###################################### ATRIBUTOS Y OTROS ######################################
     
@@ -38,6 +42,11 @@ class Player(pygame.sprite.Sprite):
         #Invulnerabilidad
         self.invulnerable: bool = False
         self.invulnerability_timer: float = 0
+        
+        #Dead icon
+        self.should_render_dead_icon: bool = False
+        self.dead_icon_timer: float = 0
+        self.dead_icon_duration: int = 92
 
         #Opacidad (para el efecto de pulsación de transparencia al ser invulnerable)
         self.respawn_invincibility: bool = False
@@ -77,6 +86,7 @@ class Player(pygame.sprite.Sprite):
         self.facing: Literal["left", "right"] = "right"
         
         self.icon: pygame.Surface = character["icon"]
+        self.dead_icon: pygame.Surface = character["icon_dead"]
         
         self.walking_sprites_left: list = character["walking_sprites_left"]
         self.walking_sprites_right: list = character["walking_sprites_right"]
@@ -284,6 +294,33 @@ class Player(pygame.sprite.Sprite):
         #Conceder invincibilidad de reaparición
         self.respawn_invincibility = respawn
     
+    def die(self, void: bool, game_end: bool = False) -> None:
+        """Hace que el jugador muera. El parámetro 'void' es para saber si el jugador murió por el vació o fue matado por el otro jugdador."""
+        self.lives -= 1
+        
+        #Si es la última vida del jugador reproducir el sonido adecuado
+        if game_end:
+            pygame.mixer.Sound.play(game_end_sound)
+            return
+        
+        #Reproducir un sonido distinto dependiendo de la causa de muerte 
+        if void:
+            pygame.mixer.Sound.play(void_death_sound)
+        else:
+            pygame.mixer.Sound.play(death_sound)
+    
+
+    def respawn(self) -> None:
+        """Hace que el jugador reaparezca."""
+        self.hp = self.character["health"]
+        self.gain_invulnerability(5, respawn = True)
+        
+        #Mover el jugador de nuevo al plantel
+        self.rect.x = random.choice([640, 1080])
+        self.rect.y = -2000
+        
+        #Iniciar el temporizador para el icono de muerte
+        self.should_render_dead_icon = True
         
     ###################################### ACTUALIZACIÓN Y ANIMACIONES ######################################
 
@@ -398,7 +435,7 @@ class Player(pygame.sprite.Sprite):
             pygame.draw.rect(screen, (0, 255, 0), self.attack_rect, 2)
     
         
-    def update(self, platforms: list, dt: float) -> None:
+    def update(self, platforms: tuple, dt: float) -> None:
         """Actualiza la posición del jugador, y hace funcionar las colisiones."""
         
         #Comprobar si el jugador se encuentra en el suelo, y si lo está resetear el salto doble y aplicar el buffering del salto
@@ -430,6 +467,15 @@ class Player(pygame.sprite.Sprite):
         
         if self.projectile_timer > 0:
             self.projectile_timer -= dt / 0.016
+        
+        #Icono de muerte
+        if self.should_render_dead_icon:
+            if self.dead_icon_timer >= self.dead_icon_duration:
+                self.should_render_dead_icon = False
+                self.dead_icon_timer = 0
+            else:
+                self.dead_icon_timer += 60 * dt
+                
         
         #Temporizador de invulnerabilidad
         if self.invulnerable:
@@ -463,3 +509,87 @@ class Player(pygame.sprite.Sprite):
         image = self.image.copy()
         image.set_alpha(self.opacity if self.opacity > 25 else 25) #no hacerlo completamente transparente
         screen.blit(image, self.rect)
+
+
+def handle_player_inputs(keys: list, players: pygame.sprite.Group) -> None:
+    """Maneja la pulsación de teclas y cuando son mantenidas."""
+    player1, player2 = players
+    
+    #Jugador 1
+    if keys[K_player1_left] and keys[K_player1_right]:
+        player1.move(0)
+        
+    elif keys[K_player1_left]:
+        player1.move(-1)
+        
+    elif keys[K_player1_right]:
+        player1.move(1)
+        
+    else:
+        player1.move(0)
+
+    #Jugador 2
+    if keys[K_player2_left] and keys[K_player2_right]:
+        player2.move(0)
+        
+    elif keys[K_player2_left]:
+        player2.move(-1)
+        
+    elif keys[K_player2_right]:
+        player2.move(1)
+        
+    else:
+        player2.move(0)
+        
+def handle_player_lives(players: pygame.sprite.Group) -> None:
+    """Maneja la lógica de los puntos de vida y las vidas restantes de los jugadores, además de sus muertes."""
+    player1, player2 = players
+    
+    for player in players:
+        
+        #Si mueren por el vacío
+        if player.rect.y >= SCREEN_HEIGHT + 100:
+            if player.lives > 0:
+                player.die(void = True)
+                player.respawn()
+            elif player.lives == 0:
+                player.die(void = True, game_end = True)
+        
+        #Si es asesinado por el otro jugador
+        if player.hp <= 0:
+            if player.lives > 0:
+                player.die(void = False)
+                player.respawn()
+            elif player.lives == 0:
+                player.die(void = False, game_end = True)
+
+    #Empate
+    if player1.lives == -1 and player2.lives == -1:
+        messagebox.showinfo(translate("tie.title"), translate("tie.text"))
+        pygame.time.wait(2000)
+        pygame.quit()
+        sys.exit()
+    
+    #Gana el jugador 2
+    elif player1.lives == -1:
+        message = (
+            f"{translate("first")}: {player2.name} {translate("using")} {player2.character["name"]} \n"
+            f"{translate("second")}: {player1.name} {translate("using")} {player1.character["name"]} \n\n"
+            f"{translate("ok.text")}"
+        )
+        
+        messagebox.showinfo("GGs", message)
+        pygame.quit()
+        sys.exit()
+    
+    #Gana el jugador 1
+    elif player2.lives == -1:
+        message = (
+            f"{translate("first")}: {player1.name} {translate("using")} {player1.character["name"]} \n"
+            f"{translate("second")}: {player2.name} {translate("using")} {player2.character["name"]} \n\n"
+            f"{translate("ok.text")}"
+        )
+        
+        messagebox.showinfo("GGs", message)
+        pygame.quit()
+        sys.exit()

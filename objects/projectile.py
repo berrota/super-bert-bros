@@ -3,6 +3,8 @@ from typing import Literal
 
 from misc.files import projectile_image_left, projectile_image_right
 
+MAX_PROJECTILES: int = 8
+
 class Projectile:
     def __init__(self, x:int, y:int, direction:Literal["left", "reight"]):
         """Inicializar la clase para los proyectiles."""
@@ -37,3 +39,38 @@ class Projectile:
         """Dibujar las hitboxes de los proyectiles en pantalla."""
         
         pygame.draw.rect(screen, (0, 255, 0), self.rect, 2)
+
+
+def handle_projectile_logic(players: pygame.sprite.Group, platforms: list) -> None:
+    """Maneja la lógica de los proyectiles."""
+    player1, player2 = players
+    
+    #Proyectiles de jugador 1
+    for projectile in player1.projectiles:
+
+        #Hacer que haga daño
+        if projectile.rect.colliderect(player2.rect):
+            player2.get_hit(projectile.direction, player1.projectile_damage)
+            player1.projectiles.remove(projectile)
+        
+        #Colisión con la plataforma grande
+        if projectile.rect.colliderect(platforms[0]):
+            player1.projectiles.remove(projectile)
+
+    #Proyectiles de jugador 2
+    for projectile in player2.projectiles:
+
+        #Hacer que haga daño
+        if projectile.rect.colliderect(player1.rect):
+            player1.get_hit(projectile.direction, player2.projectile_damage)
+            player2.projectiles.remove(projectile)
+        
+        #Colisión con la plataforma grande
+        if projectile.rect.colliderect(platforms[0]):
+            player2.projectiles.remove(projectile)
+    
+    if len(player1.projectiles) > MAX_PROJECTILES: #Máximos proyectiles permitidos
+                player1.projectiles.pop(0)
+
+    if len(player2.projectiles) > MAX_PROJECTILES: #Máximos proyectiles permitidos
+                player2.projectiles.pop(0)

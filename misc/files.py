@@ -3,6 +3,12 @@ import screeninfo
 
 pygame.init()
 
+#Constantes que puse aquí por que no sé dónde si no ponerlas
+SCREEN_WIDTH: int = 1920
+SCREEN_HEIGHT: int = 1080
+
+FPS: int = 60
+
 ####################################### SPRITES #######################################
 
 big_platform_image = pygame.image.load("assets/images/platform/platform_big.png")
