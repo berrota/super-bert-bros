@@ -3,7 +3,7 @@ import json
 import tkinter as tk
 from tkinter import ttk
 
-from misc.files import width, height
+from misc.files import SCREEN_WIDTH, SCREEN_HEIGHT
 
 from util.translator import translate
 
@@ -75,7 +75,7 @@ def settings_screen() -> tuple[bool, bool, str]:
     #Ventana
     root = tk.Tk()
     root.title(translate("options.title"))
-    root.geometry(f"300x200+{width // 2 - 300 // 2}+{height // 2 - 200}")
+    root.geometry(f"300x200+{SCREEN_WIDTH // 2 - 300 // 2}+{SCREEN_HEIGHT // 2 - 200}")
     root.resizable(False, False)
     root.focus()
     

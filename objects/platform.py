@@ -6,8 +6,9 @@ from misc.files import big_platform_image, small_platform_image
 class Platform:
     """Objeto para las plataformas. Existen dos tipos: Grandes (la principal) y pequeñas (las otras dos que están más elevadas)."""
     
-    def __init__(self, x:int, y:int, w:int, h:int, size:Literal["big", "small"]):
+    def __init__(self, dimensions: tuple, size: Literal["big", "small"]):
         #Diferenciar entre dos tipos de plataformas: grandes (big) y pequeñas (small)
+        x, y, w, h = dimensions
         self.size: Literal["big", "small"] = size
         
         self.image: pygame.Surface = big_platform_image if size == "big" else small_platform_image

@@ -49,9 +49,8 @@ def main() -> NoReturn:
     debug: bool = False
     pause: bool = False
 
-    #Proyectiles
+    # Pantalla
     fullscreen: bool = True
-    
     screen: pygame.Surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     
     pygame.display.set_caption(translate("title"))
@@ -69,16 +68,16 @@ def main() -> NoReturn:
     #Crear grupos de sprites y los jugadores
     players: pygame.sprite.Group = pygame.sprite.Group()
     
-    player1: Player = Player(640, 0, characters[0], characters[2], characters[4])
-    player2: Player = Player(1080, 0, characters[1], characters[3], characters[5])
+    player1: Player = Player(1/3 * SCREEN_WIDTH, 0, characters[0], characters[2], characters[4])
+    player2: Player = Player(2/3 * SCREEN_WIDTH, 0, characters[1], characters[3], characters[5])
 
     players.add(player1, player2)
     
     #Crear las plataformas
     platforms: tuple = (
-        Platform(360, 500, 1200, 300, "big"),
-        Platform(640, 250, 200, 30, "small"),
-        Platform(1080, 250, 200, 30, "small")
+        Platform(relres(360, 500, 1200, 300), "big"),
+        Platform(relres(640, 250, 200, 30), "small"),
+        Platform(relres(1080, 250, 200, 30), "small")
     )
     
     #Ajustar volumen desde preferencias guardadas
@@ -117,8 +116,11 @@ def main() -> NoReturn:
                 pygame.mixer.music.unpause()
 
             #Manejo de teclas
-            keys = pygame.key.get_pressed()
-            handle_player_inputs(keys, players)
+            keys_list = list(pygame.key.get_pressed())
+            prev_keys = keys_list.copy()
+            keys = pygame.key.ScancodeWrapper(keys_list)
+
+            handle_player_inputs(keys, players, prev_keys, deltaTime)
 
             #Lógica de proyectiles
             handle_projectile_logic(players, platforms)
@@ -205,7 +207,7 @@ def handle_game_events(event: pygame.event.Event, pause: bool, debug: bool, play
         elif event.key == K_quit: #cerrar el juego por medio de la pulsación de la tecla de cerrado
             pygame.quit()
             sys.exit()
-    
+
 
     #Hacer que los botones del menú de pausa funcionen
     elif event.type == pygame.MOUSEBUTTONDOWN and pause:
@@ -222,11 +224,11 @@ def handle_game_events(event: pygame.event.Event, pause: bool, debug: bool, play
         #Cambiar personajes
         if change_characters.collidepoint(event.pos):
             #Almacenar vida y puntos de vida totales anteriores de los jugadores
-            old_player1_hp = player1.__getattribute__("hp")
-            old_player1_total_hp = player1.__getattribute__("character")["health"]
+            old_player1_hp = player1.hp
+            old_player1_total_hp = player1.character["health"]
             
-            old_player2_hp = player2.__getattribute__("hp")
-            old_player2_total_hp = player2.__getattribute__("character")["health"]
+            old_player2_hp = player2.hp
+            old_player2_total_hp = player2.character["health"]
             
             #Dejar a los jugadores elegir sus nuevos personajes
             characters = character_selection_screen(player1.name, player1.character["name"], player1.color, player2.name, player2.character["name"], player2.color)
@@ -288,112 +290,115 @@ def render(screen: pygame.Surface, players: pygame.sprite.Group, platforms: tupl
     """Dibuja todos los objetos necesarios en pantalla."""
     player1, player2 = players
     
-    #Fondo
-    screen.blit(bg_image, (0, 0))
-
-    #Icono de jugador 1
-    if player1.should_render_dead_icon:
-        screen.blit(player1.dead_icon, (480, 830))
-    else:
-        screen.blit(player1.icon, (480, 840))
+    # superficie buffer para la resolución relativa
+    buffer_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
     
-    #Nombre de jugador 1
+    #Fondo
+    buffer_surface.blit(bg_image, (0, 0))
+    
+    # Icono de jugador 1
+    if player1.should_render_dead_icon:
+        buffer_surface.blit(player1.dead_icon, relres(480, 830))
+    else:
+        buffer_surface.blit(player1.icon, relres(480, 840))
+    
+    # Nombre de jugador 1
     player1_name_surface = font.render(player1.name, True, player1.color)
     player1_text_width = player1_name_surface.get_width()
-    player1_text_width += 20 #añadir padding (espacio a los lados)
-    pygame.draw.rect(screen, WHITE, (480, 950, player1_text_width, 45), 0, 8)
-    screen.blit(player1_name_surface, (490, 955))
+    player1_text_width += relres(20)  # Añadir padding (espacio a los lados)
+    pygame.draw.rect(buffer_surface, WHITE, relres(480, 950, player1_text_width / SCREEN_WIDTH * 1920, 45), 0, 8)
+    buffer_surface.blit(player1_name_surface, relres(490, 955))
     
-    #Vida de jugador 1
+    # Vida de jugador 1
     if player1.lives >= 0:
-        screen.blit(title_font.render(f"{str(player1.hp)} hp", True, WHITE), (480, 900))
+        buffer_surface.blit(title_font.render(f"{str(player1.hp)} hp", True, WHITE), relres(480, 900))
         
-        #Vidas de jugador 1
+        # Vidas de jugador 1
         if player1.lives == 2:
-            screen.blit(heart_image, (550, 997))
-            screen.blit(heart_image, (515, 997))
-            screen.blit(heart_image, (480, 997))
-            
+            buffer_surface.blit(heart_image, relres(550, 997))
+            buffer_surface.blit(heart_image, relres(515, 997))
+            buffer_surface.blit(heart_image, relres(480, 997))
         elif player1.lives == 1:
-            screen.blit(heart_image, (515, 997))
-            screen.blit(heart_image, (480, 997))
-            
+            buffer_surface.blit(heart_image, relres(515, 997))
+            buffer_surface.blit(heart_image, relres(480, 997))
         elif player1.lives == 0:
-            screen.blit(heart_image, (480, 997))
+            buffer_surface.blit(heart_image, relres(480, 997))
             
     elif player1.lives < 0:
-        screen.blit(title_font.render(translate("dead"), True, DARK_RED), (480, 900))
+        buffer_surface.blit(title_font.render(translate("dead"), True, DARK_RED), relres(480, 900))
 
-
-    #Icono de jugador 2
-    screen.blit(player2.icon, (1315, 840))
+    # Icono de jugador 2
+    buffer_surface.blit(player2.icon, relres(1315, 840))
     
-    #Nombre de jugador 2
+    # Nombre de jugador 2
     player2_name_surface = font.render(player2.name, True, player2.color)
     player2_text_width = player2_name_surface.get_width()
-    player2_text_width += 20 #añadir padding (espacio a los lados)
-    pygame.draw.rect(screen, WHITE, (1315, 950, player2_text_width, 45), 0, 8)
-    screen.blit(player2_name_surface, (1325, 955))
+    player2_text_width += relres(20)  # Añadir padding (espacio a los lados)
+    pygame.draw.rect(buffer_surface, WHITE, relres(1315, 950, player2_text_width / SCREEN_WIDTH * 1920, 45), 0, 8)
+    buffer_surface.blit(player2_name_surface, relres(1325, 955))
     
-    #Vida de jugador 2
+    # Vida de jugador 2
     if player2.lives >= 0:
-        screen.blit(title_font.render(f"{str(player2.hp)} hp", True, WHITE), (1315, 900))
+        buffer_surface.blit(title_font.render(f"{str(player2.hp)} hp", True, WHITE), relres(1315, 900))
         
-        #Vidas de jugador 2
+        # Vidas de jugador 2
         if player2.lives == 2:
-            screen.blit(heart_image, (1385, 997))
-            screen.blit(heart_image, (1350, 997))
-            screen.blit(heart_image, (1315, 997))
-            
+            buffer_surface.blit(heart_image, relres(1385, 997))
+            buffer_surface.blit(heart_image, relres(1350, 997))
+            buffer_surface.blit(heart_image, relres(1315, 997))
         elif player2.lives == 1:
-            screen.blit(heart_image, (1350, 997))
-            screen.blit(heart_image, (1315, 997))
-            
+            buffer_surface.blit(heart_image, relres(1350, 997))
+            buffer_surface.blit(heart_image, relres(1315, 997))
         elif player2.lives == 0:
-            screen.blit(heart_image, (1315, 997))
-            
+            buffer_surface.blit(heart_image, relres(1315, 997))
     elif player2.lives < 0:
-        screen.blit(title_font.render(translate("dead"), True, DARK_RED), (1315, 900))
+        buffer_surface.blit(title_font.render(translate("dead"), True, DARK_RED), relres(1315, 900))
 
     #Plataformas
     for platform in platforms:
-        platform.draw(screen)
+        platform.draw(buffer_surface)
     
     #Jugadores
     for player in players:
-        player.draw(screen)
+        player.draw(buffer_surface)
     
     #Proyectiles
     for player in players:
-        player.draw_projectiles(screen)
+        player.draw_projectiles(buffer_surface)
     
-    #Etiquetas de nombre para los jugadores
+    # Etiquetas de nombre para los jugadores
     for player in players:
         player_nametag = small_font.render(player.name, True, hex_to_rgb(player.color))
         player_name_width = player_nametag.get_width() + 20
-        player_name_height = 30
+        player_name_height = relres(30)
         
         player_name_x = player.rect.x + (player.rect.width // 2) - (player_name_width // 2)
         player_name_y = player.rect.y - player_name_height - 10
         
-        pygame.draw.rect(screen, WHITE, (player_name_x, player_name_y, player_name_width, player_name_height), 0, 8)
-        screen.blit(player_nametag, (player_name_x + 10, player_name_y + 2))
+        pygame.draw.rect(buffer_surface, WHITE, (player_name_x, player_name_y, player_name_width, player_name_height), 0, 8)
+        buffer_surface.blit(player_nametag, (player_name_x + 10, player_name_y + 2))
 
-    #Hitboxes y otra información debug (si están activadas)
+    # Hitboxes y otra información debug (si están activadas)
     if debug:
         for platform in platforms:
-            platform.draw_hitboxes(screen)
+            platform.draw_hitboxes(buffer_surface)
 
         for player in players:
-            player.draw_hitboxes(screen)
+            player.draw_hitboxes(buffer_surface)
 
         for projectile in player1.projectiles:
-            projectile.draw_hitboxes(screen)
+            projectile.draw_hitboxes(buffer_surface)
 
         for projectile in player2.projectiles:
-            projectile.draw_hitboxes(screen)
+            projectile.draw_hitboxes(buffer_surface)
         
-        screen.blit(font.render(f"Player 1 status: {player1.status}", True, BLACK), (0, 0))
-        screen.blit(font.render(f"Player 2 status: {player2.status}", True, BLACK), (0, 30))
-        screen.blit(font.render(f"Player 1 inv.: {player1.invulnerable} ({int(player1.invulnerability_timer * 1000)} ms)", True, BLACK), (0, 60))
-        screen.blit(font.render(f"Player 2 inv.: {player2.invulnerable} ({int(player2.invulnerability_timer * 1000)} ms)", True, BLACK), (0, 90))
+        buffer_surface.blit(font.render(f"Player 1 status: {player1.status}", True, BLACK), relres(0, 0))
+        buffer_surface.blit(font.render(f"Player 2 status: {player2.status}", True, BLACK), relres(0, 30))
+        buffer_surface.blit(font.render(f"Player 1 inv.: {player1.invulnerable} ({int(player1.invulnerability_timer * 1000)} ms)", True, BLACK), relres(0, 60))
+        buffer_surface.blit(font.render(f"Player 2 inv.: {player2.invulnerable} ({int(player2.invulnerability_timer * 1000)} ms)", True, BLACK), relres(0, 90))
+
+    # Escalar la superficie "buffer" para ajustarse al tamaño de la ventana
+    scaled_surface = pygame.transform.smoothscale(buffer_surface, (screen.get_width(), screen.get_height()))
+    
+    # Dibujar la superficie escalada en la pantalla
+    screen.blit(scaled_surface, (0, 0))

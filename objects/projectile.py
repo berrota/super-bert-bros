@@ -1,18 +1,18 @@
 import pygame
 from typing import Literal
 
-from misc.files import projectile_image_left, projectile_image_right
+from misc.files import projectile_image_left, projectile_image_right, relres
 
 MAX_PROJECTILES: int = 8
 
 class Projectile:
-    def __init__(self, x:int, y:int, direction:Literal["left", "reight"]):
+    def __init__(self, x:int, y:int, direction:Literal["left", "right"]):
         """Inicializar la clase para los proyectiles."""
         
         #Atributos para el movimiento
-        self.rect: pygame.Rect = pygame.Rect(x, y, 64, 64)
+        self.rect: pygame.Rect = pygame.Rect(x, y, relres(64), relres(y=64))
         self.start_pos: int = x
-        self.max_displacement: int = 960
+        self.max_displacement: int = relres(960)
         self.velocity: int = 13
         self.direction: Literal["left", "right"] = direction
         self.image: pygame.Surface = projectile_image_left if direction == "left" else projectile_image_right
@@ -41,7 +41,7 @@ class Projectile:
         pygame.draw.rect(screen, (0, 255, 0), self.rect, 2)
 
 
-def handle_projectile_logic(players: pygame.sprite.Group, platforms: list) -> None:
+def handle_projectile_logic(players: pygame.sprite.Group, platforms: tuple) -> None:
     """Maneja la lógica de los proyectiles."""
     player1, player2 = players
     

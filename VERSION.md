@@ -2,6 +2,7 @@
 # HISTORIAL DE CAMBIOS 
 
 ## Por añadir:
+- Soporte para Linux
 - Recuperación y ataques cargados
 - Eliminar sistema de puntos de vida y pasar a usar sistema de porcentaje como en el Smash (cuando añada recuperación)
 - Iconos especiales para cuando un jugador muere (ya están hechos pero falta implementarlos)
@@ -21,13 +22,17 @@
 - Anteriormente, el efecto de sonido que sonaba al lanzar un proyectil tardaba en sonar porque el audio tenía una sección vacía al principio. He recortado el audio para eliminar este problema, sin embargo, ahora suena un sonido extraño por unas milésimas de segundo al reproducir este audio
 - Algunas animaciones (especialmente la de ataque cuerpo a cuerpo) no funcionan demasiado bien y pueden ir desfasadas con el sonido, además de no siempre reproducirse por completo
 - `util/translator.translate()` abre el archivo de preferencias y lee el idioma cada vez que hace una traducción, lo que podría reducir el rendimiento. Sin embargo, me gusta la idea de poder cambiar de idioma sin reiniciar el juego, por lo que estoy indeciso entre cambiarlo o no. Hasta que me decida esto lo marco como un bug
-- La animación del puñetazo a veces va con delay o simplemente funciona bien
+- La animación del puñetazo a veces va con delay o simplemente no funciona bien
 - Al mover la ventana alrededor por unos segundos mientas no esté en pantalla completa, los personajes cambian de lugar. Creo que esto se debe a cómo se maneja el movimiento y el momentum de los personajes
 - Resulta que por algún motivo ahora los personajes pueden aparecer debajo de las plataformes en vez de encima. Tiene que ver con estar mucho tiempo en la pantalla de selección de personajes
 - Delta time hace que cuanto mayor sean los FPS menos se mueven los jugadores (relativamente) y viceversa
-- El juego puede quedarse congelado, obligándote a reiniciarlo para poder jugar. Esto es un problema con la librería de sonido (pygame.mixer), no el juego, por lo que no estoy muy seguro de cómo arreglarlo
+- El juego puede quedarse congelado, obligándote a reiniciarlo para poder jugar.
 
 ## Historial de cambios
+
+### **1.6** [11/04/24]
+- Arreglo de algunos bugs que no había encontrado antes
+- Resolución relativa, ahora es posible jugar en pantallas que no sean 1920x1080
 
 ### **1.5** [19/10/24]
 - Ahora el icono de muerte reemplaza al icono normal por 92 ticks tras morir

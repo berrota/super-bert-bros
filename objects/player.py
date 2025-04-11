@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
         self.invulnerable: bool = False
         self.invulnerability_timer: float = 0
         
-        #Dead icon
+        #Icono de muerte
         self.should_render_dead_icon: bool = False
         self.dead_icon_timer: float = 0
         self.dead_icon_duration: int = 92
@@ -57,8 +57,14 @@ class Player(pygame.sprite.Sprite):
         self.attacking: bool = False
         self.attack_cooldown: int = 20
         self.attack_timer: float = 0
-        self.attack_rect: pygame.Rect = None
+        self.attack_rect: pygame.Rect | None = None
         self.hit_registered: bool = False
+        
+        #Ataques cargados
+        self.charged_attack_timer: float = 0
+        self.max_charged_attack_duration: int = 500
+        self.is_charging_attack: bool = False
+        self.attack_key_timer: float = 0
         
         #Ataques a distancia / proyectiles
         self.projectiles: list[Projectile] = []
@@ -148,7 +154,7 @@ class Player(pygame.sprite.Sprite):
             self.dy -= self.jump_velocity
             self.on_ground = False
             self.jumping = True
-        elif not self.double_jump_used and not self.on_ground: #saltos dobles, con mayor impulso vertical para contrarestar la gravedad
+        elif not self.double_jump_used and not self.on_ground: #saltos dobles, con mayor impulso vertical para contrarrestar la gravedad
             self.dy = -self.jump_velocity
             self.double_jump_used = True
             self.jumping = True
@@ -177,8 +183,8 @@ class Player(pygame.sprite.Sprite):
         """Dispara un proyectil que emite daño."""
         
         if self.projectile_timer <= 0:
-            x = self.rect.centerx - 64 if self.facing == "left" else self.rect.centerx
-            y = self.rect.centery - 32
+            x = self.rect.centerx - relres(64) if self.facing == "left" else self.rect.centerx
+            y = self.rect.centery - relres(y=32)
             
             pygame.mixer.Sound.play(projectile_sound)
             projectile = Projectile(x, y, self.facing)
@@ -190,18 +196,46 @@ class Player(pygame.sprite.Sprite):
     
     def update_projectiles(self, dt: float) -> None:
         """Maneja los proyectiles y los mantiene actualizados."""
-        
-        for projectile in self.projectiles[:]:
+        for projectile in self.projectiles:
             projectile.move(dt)
             if projectile.is_out_of_bounds():
                 self.projectiles.remove(projectile)
     
     def draw_projectiles(self, screen:pygame.Surface) -> None:
         """Dibuja los proyectiles en pantalla."""
-        
         for projectile in self.projectiles:
             projectile.draw(screen)
     
+    def start_charging_attack(self) -> None:
+        """Comienza a cargar el ataque."""
+        if self.attack_timer <= 0:
+            self.is_charging_attack = True
+    
+    # def release_charged_attack(self) -> None:
+    #     """Liberar el ataque cargado."""
+    #     self.attack_rect = self.create_charged_attack_hitbox()
+    #     self.is_charging_attack = False
+    #     self.charged_attack_timer = 0
+
+    def release_charged_attack(self) -> None:
+        if not self.is_charging_attack:
+            return
+        damage_multiplier = min(self.charged_attack_timer / self.max_charged_attack_duration, 1.0)
+        self.attack_rect = self.create_charged_attack_hitbox()
+        self.is_charging_attack = False
+        self.charged_attack_timer = 0
+        self.damage = self.character["damage"] * (1 + damage_multiplier)
+    
+    def create_charged_attack_hitbox(self) -> pygame.Rect:
+        hitbox_size = int(self.charged_attack_timer)
+        
+        if self.facing == "left":
+            attack_rect = pygame.Rect(self.rect.left - hitbox_size, self.rect.top, hitbox_size, self.rect.height)
+        else:
+            attack_rect = pygame.Rect(self.rect.right, self.rect.top, hitbox_size, self.rect.height)
+        
+        return attack_rect
+            
     
     def attack(self) -> None:
         """Activa un ataque cuerpo a cuerpo si el cooldown lo permite."""
@@ -214,9 +248,9 @@ class Player(pygame.sprite.Sprite):
     def create_attack_hitbox(self) -> pygame.Rect:
         """Crea una hitbox o caja de colisiones para el ataque cuerpo a cuerpo."""
         if self.facing == "left":
-            attack_rect = pygame.Rect(self.rect.left - 50,  self.rect.top, 50, self.rect.height)
+            attack_rect = pygame.Rect(self.rect.left - relres(50),  self.rect.top, relres(50), self.rect.height)
         else:
-            attack_rect = pygame.Rect(self.rect.right, self.rect.top, 50, self.rect.height)
+            attack_rect = pygame.Rect(self.rect.right, self.rect.top, relres(50), self.rect.height)
         
         return attack_rect
     
@@ -228,8 +262,15 @@ class Player(pygame.sprite.Sprite):
             self.hit_registered = True
             pygame.mixer.Sound.play(attack_sound)
             self.attack_rect = None
-            player.get_hit("left" if player.rect.center < self.rect.center else "right", self.damage)
-    
+            if not self.is_charging_attack:
+                player.get_hit("left" if player.rect.center < self.rect.center else "right", self.damage)
+            else:
+                player.get_hit("left" if player.rect.center < self.rect.center else "right", self.damage * self.charged_attack_timer / 200)
+
+        if self.is_charging_attack:
+            player.get_hit("left" if player.rect.center < self.rect.center else "right",
+                           self.damage * self.charged_attack_timer / 200)
+
     def update_attack(self, dt: float, player) -> None:
         """Actualizar el estado del ataque y su temporizador."""
         if self.attacking:
@@ -316,8 +357,8 @@ class Player(pygame.sprite.Sprite):
         self.gain_invulnerability(5, respawn = True)
         
         #Mover el jugador de nuevo al plantel
-        self.rect.x = random.choice([640, 1080])
-        self.rect.y = -2000
+        self.rect.x = random.choice(relres(640, 1080))
+        self.rect.y = relres(y=-2000)
         
         #Iniciar el temporizador para el icono de muerte
         self.should_render_dead_icon = True
@@ -462,7 +503,6 @@ class Player(pygame.sprite.Sprite):
                     self.on_ground = True
         
         #Actualizar los proyectiles
-        #los ataques cuerpo a cuerpo se actualizan en game.py
         self.update_projectiles(dt)
         
         if self.projectile_timer > 0:
@@ -490,7 +530,13 @@ class Player(pygame.sprite.Sprite):
             self.opacity = int((math.sin(self.pulse_timer * 3) + 1) * 127.5)  # Pulsing effect
         else:
             self.opacity = 255
-        
+
+        #Ataques cargados
+        if self.is_charging_attack:
+            self.charged_attack_timer += dt
+            if self.charged_attack_timer > self.max_charged_attack_duration:
+                self.charged_attack_timer = self.max_charged_attack_duration
+
         #Comprobar qué acción está realizando el jugador
         if self.status != "damaged" and self.status != "shooting":
             if self.jumping:
@@ -511,11 +557,11 @@ class Player(pygame.sprite.Sprite):
         screen.blit(image, self.rect)
 
 
-def handle_player_inputs(keys: list, players: pygame.sprite.Group) -> None:
+def handle_player_inputs(keys: list, players: pygame.sprite.Group, prev_keys: list, dt: float) -> None:
     """Maneja la pulsación de teclas y cuando son mantenidas."""
     player1, player2 = players
     
-    #Jugador 1
+    #Movimiento de jugador 1
     if keys[K_player1_left] and keys[K_player1_right]:
         player1.move(0)
         
@@ -524,11 +570,28 @@ def handle_player_inputs(keys: list, players: pygame.sprite.Group) -> None:
         
     elif keys[K_player1_right]:
         player1.move(1)
-        
+    
     else:
         player1.move(0)
+    
+    if keys[K_player1_attack]:
+        if not prev_keys[K_player1_attack]: 
+            player1.attack_key_timer = 0
+        player1.attack_key_timer += dt
+    
+    elif prev_keys[K_player1_attack]:
+        if 0.1 < player1.attack_key_timer <= 0.3:
+            player1.attack()
+        
+        elif player1.attack_key_timer > 0.3:
+            player1.start_charging_attack()
+        
+        player1.attack_key_timer = 0
 
-    #Jugador 2
+    if player1.is_charging_attack and not keys[K_player1_attack]:
+        player1.release_charged_attack()
+    
+    #Movimiento de jugador 2
     if keys[K_player2_left] and keys[K_player2_right]:
         player2.move(0)
         
@@ -537,9 +600,10 @@ def handle_player_inputs(keys: list, players: pygame.sprite.Group) -> None:
         
     elif keys[K_player2_right]:
         player2.move(1)
-        
+    
     else:
         player2.move(0)
+
         
 def handle_player_lives(players: pygame.sprite.Group) -> None:
     """Maneja la lógica de los puntos de vida y las vidas restantes de los jugadores, además de sus muertes."""
